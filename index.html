@@ -1,0 +1,1131 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo ThirdWish · Inteligencia jurídica para Profuturo</title>
+<script>try{var t=localStorage.getItem('tw-demo-tema');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{
+  --bg:#F6F2F4; --chrome:#2A1220; --chrome-2:#3A1B2D; --chrome-ink:#F7EEF3; --chrome-muted:#CDB6C3; --chrome-line:#5A3349;
+  --panel:#FFFFFF; --paper:#FFFEFC; --ink:#24161D; --muted:#6F5D67; --line:#E7D9E1; --soft:#FBF6F9;
+  --brand:#E6007E; --brand-ink:#A3005A; --brand-soft:#FBE2EF; --on-brand:#FFFFFF;
+  --ok:#1D7A4C; --ok-soft:#E2F2E9; --warn:#9A5800; --warn-soft:#FCEED8; --risk:#B42318; --risk-soft:#FDE6E3;
+  --info:#2E5AAC; --info-soft:#E6EEFB; --why:#5E4A55; --purpose:#FFF7FB;
+  --map-text:#24161D; --map-box:#FFFFFF; --map-who:#E6EEFB; --map-edge:#E2D0DA;
+  --shadow:0 1px 2px rgba(70,20,45,.06), 0 12px 32px rgba(70,20,45,.10);
+  --serif:Georgia, "Times New Roman", Times, serif;
+  --sans:Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#140E12; --chrome:#0E080B; --chrome-2:#1E1219; --chrome-line:#4A2A3C; --panel:#211820; --paper:#261C24; --ink:#F4EAF0; --muted:#B9A5B0; --line:#3A2B34; --soft:#1C1419;
+  --brand:#FF3FA0; --brand-ink:#FF9ACB; --brand-soft:#3E1129; --on-brand:#1A0610;
+  --ok:#62D39C; --ok-soft:#123222; --warn:#F2B75E; --warn-soft:#33240D; --risk:#FF8F86; --risk-soft:#3B1613; --info:#93B6FF; --info-soft:#17233B; --why:#CDB6C3; --purpose:#2A1A24;
+  --map-text:#F4EAF0; --map-box:#2A1F27; --map-who:#17233B; --map-edge:#4A3843;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.4); color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:14.5px/1.5 var(--sans)}
+button,select,input,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0}
+a{color:var(--brand-ink)}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* Estructura */
+.shell{display:grid;grid-template-columns:240px 1fr;grid-template-rows:auto 1fr;min-height:100vh}
+.top{grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:10px 18px;background:var(--chrome);color:var(--chrome-ink)}
+.wm{font:700 12px/1 var(--sans);letter-spacing:.3em;color:#FF6BB5}
+.top .prod{font-family:var(--serif);font-size:18px}
+.top .day{color:var(--chrome-muted);font-size:13px}
+.top .sp{flex:1}
+.top select,.top .tbtn{background:var(--chrome-2);color:var(--chrome-ink);border:1px solid var(--chrome-line);border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer}
+.top .tbtn[aria-pressed="true"]{border-color:#FF6BB5}
+.top .tbtn.pri{background:#E6007E;border-color:#E6007E;color:#fff;font-weight:700}
+.top .fict{font-size:12px;font-weight:700;background:#FCEED8;color:#9A5800;padding:4px 10px;border-radius:999px}
+.rail{background:var(--panel);border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:2px}
+.rail button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:9px 10px;cursor:pointer;color:var(--ink)}
+.rail button:hover{background:var(--soft)}
+.rail button[aria-current="page"]{background:var(--brand-soft);color:var(--brand-ink);font-weight:700}
+.rail button .ic{width:22px;height:22px;flex:none;color:var(--muted)}
+.rail button[aria-current="page"] .ic{color:var(--brand-ink)}
+.rail button .n{margin-left:auto;font-size:11.5px;font-weight:700;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:0 7px;color:var(--muted);white-space:nowrap}
+.rail button.locked{opacity:.45}
+.rail .sep{height:1px;background:var(--line);margin:10px 6px}
+.rail .who{font-size:12.5px;color:var(--muted);padding:6px 10px}
+.rail .grp{font:700 12px var(--sans);color:var(--muted);padding:12px 10px 4px}
+.rail .grp.sub{color:var(--ink);padding-top:4px}
+.rail button.sub{padding-left:22px}
+main{padding:20px 22px 120px;min-width:0}
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .rail{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px}
+  .rail button{width:auto;white-space:nowrap}
+  .rail .sep,.rail .who,.rail .grp{display:none}
+  main{padding:16px 16px 150px}
+}
+
+/* Explicaciones */
+.purpose{background:var(--purpose);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:10px;padding:10px 14px;margin:0 0 16px;font-size:13.5px;line-height:1.55}
+.purpose b{color:var(--brand-ink)}
+.purpose .with{display:block;margin-top:4px;color:var(--muted);font-size:12.5px}
+.why{font-size:12.5px;color:var(--why);margin:-4px 0 10px;padding-left:10px;border-left:2px solid var(--brand-soft)}
+body.sin-explicaciones .purpose,body.sin-explicaciones .why{display:none}
+
+/* Piezas comunes */
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:12px}
+.head h1{font-size:26px}
+.head p{margin:4px 0 0;color:var(--muted);max-width:72ch}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:1100px){.grid2{grid-template-columns:1fr}.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.grid4{grid-template-columns:1fr}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.box h2{font-size:19px;margin-bottom:8px}
+.muted{color:var(--muted)}
+.small{font-size:12.5px}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 9px;margin-right:4px;vertical-align:middle}
+.t-brand{background:var(--brand-soft);color:var(--brand-ink)}
+.t-ok,.t-real{background:var(--ok-soft);color:var(--ok)}
+.t-warn,.t-fict{background:var(--warn-soft);color:var(--warn)}
+.t-risk{background:var(--risk-soft);color:var(--risk)}
+.t-info{background:var(--info-soft);color:var(--info)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 12px;font-weight:700;font-size:13px;cursor:pointer}
+.btn:hover{border-color:var(--brand)}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.btn.ghost{background:none}
+.btn[disabled]{opacity:.5;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.cite{border:0;background:var(--info-soft);color:var(--info);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;cursor:pointer;margin:2px 4px 2px 0}
+.cite:hover{text-decoration:underline}
+
+/* Hoy */
+.kpi{text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:14px;cursor:pointer}
+.kpi:hover{border-color:var(--brand)}
+.kpi .v{font:400 32px/1 var(--serif);color:var(--brand-ink)}
+.kpi .l{display:block;margin-top:6px;font-weight:700}
+.kpi .s{display:block;font-size:12.5px;color:var(--muted)}
+.feed{display:flex;flex-direction:column;gap:10px}
+.card{display:grid;grid-template-columns:86px 1fr auto;gap:12px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.card.urg{border-left:5px solid var(--risk)}
+.card.ask{border-left:5px solid var(--warn)}
+.card .src{font-weight:700;font-size:12px;color:var(--brand-ink);padding-top:3px}
+.card h3{font:700 15px/1.35 var(--sans);margin:0 0 3px}
+.card p{margin:0;color:var(--muted)}
+.card .acts{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+@media (max-width:700px){.card{grid-template-columns:1fr}.card .acts{align-items:flex-start;flex-direction:row;flex-wrap:wrap}}
+.welcome{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--chrome);color:var(--chrome-ink);border-radius:12px;padding:14px 18px;margin-bottom:16px}
+.welcome b{font-family:var(--serif);font-weight:400;font-size:19px}
+.welcome .btn.pri{background:#E6007E;border-color:#E6007E;color:#fff}
+.sect{margin:18px 0 8px;font:700 13px var(--sans);color:var(--muted)}
+
+/* Papel: normas y contratos */
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:4px;box-shadow:var(--shadow);padding:26px 30px;font:16px/1.7 var(--serif);color:var(--ink)}
+.paper h3{font:700 12px/1.3 var(--sans);letter-spacing:.04em;color:var(--muted);margin:0 0 10px}
+.paper .art{margin:0 0 14px}
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:700px){.diff{grid-template-columns:1fr}.paper{padding:18px}}
+.diff .col{border-top:3px solid var(--line);padding-top:8px}
+.diff .col.new{border-top-color:var(--brand)}
+del{background:var(--risk-soft);color:var(--risk)}
+ins{background:var(--ok-soft);color:var(--ok);text-decoration:none}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.tab{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font:700 13px var(--sans);cursor:pointer;color:var(--muted)}
+.tab[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.list{display:flex;flex-direction:column;gap:8px}
+.li{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:11px 12px;cursor:pointer}
+.li:hover{border-color:var(--brand)}
+.li[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft)}
+.li b{display:block}
+.clause{display:block;width:100%;text-align:left;border:0;background:none;padding:6px 8px;margin:0 0 10px;border-radius:6px;font:16px/1.7 var(--serif);cursor:default}
+.clause.flag{box-shadow:inset 3px 0 0 var(--warn);background-color:var(--warn-soft);cursor:pointer}
+.clause.flag.risk{box-shadow:inset 3px 0 0 var(--risk);background-color:var(--risk-soft)}
+.clause.flag.fixed{box-shadow:inset 3px 0 0 var(--ok);background-color:var(--ok-soft)}
+.clause.sel{outline:2px solid var(--brand)}
+.esec{margin:0 0 12px;font:16px/1.7 var(--serif)}
+.esec>b{font-family:var(--sans);font-size:13px;letter-spacing:.02em;color:var(--muted);display:block}
+.etx{display:inline;outline:none;border-radius:4px;padding:1px 2px}
+.etx:hover{background:var(--soft)}
+.etx:focus{background:var(--brand-soft);box-shadow:0 0 0 2px var(--brand)}
+mark.pend{background:var(--warn-soft);color:var(--warn);font:700 13px/1.5 var(--sans);border:1px dashed var(--warn);border-radius:6px;padding:1px 6px;margin-left:4px}
+.firmado{border:2px solid var(--ok);color:var(--ok);font:700 13px var(--sans);border-radius:8px;padding:6px 10px;display:inline-block;margin-top:6px}
+.alert{border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:8px;padding:10px 12px;background:var(--panel);margin-bottom:8px;cursor:pointer}
+.alert.risk{border-left-color:var(--risk)}
+.alert.fixed{border-left-color:var(--ok);opacity:.85}
+.alert.sel{outline:2px solid var(--brand)}
+.alert b{display:block;font-size:14px}
+.alert p{margin:4px 0 6px;font-size:13px;color:var(--muted)}
+
+/* Mapa */
+.mapwrap{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}
+@media (max-width:1100px){.mapwrap{grid-template-columns:1fr}}
+svg.map{width:100%;height:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.node{cursor:pointer}
+.node:hover circle,.node:hover rect,.node:focus circle,.node:focus rect{stroke-width:3}
+.node:focus{outline:none}
+.node text{font:12.5px var(--sans);fill:var(--map-text);pointer-events:none}
+.node .box-item{fill:var(--map-box)}
+.node .box-who{fill:var(--map-who)}
+.node.on circle,.node.on rect{stroke:#E6007E;stroke-width:3.5}
+.edge{stroke:var(--map-edge);stroke-width:2}
+.edge.on{stroke:#E6007E}
+
+/* Plazos */
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:700}
+tbody tr[data-act]{cursor:pointer}
+tbody tr[data-act]:hover td{background:var(--soft)}
+tbody tr.sel td{background:var(--brand-soft)}
+.tblw{overflow-x:auto}
+.tblw table{min-width:720px}
+.vig{position:relative;margin:8px 0 4px;padding:40px 0 12px}
+.vig .bar{display:flex;height:14px;border-radius:999px;overflow:hidden}
+.vig .old{background:var(--info-soft);flex:9}
+.vig .gap{background:repeating-linear-gradient(45deg,var(--warn-soft),var(--warn-soft) 6px,var(--panel) 6px,var(--panel) 12px);flex:2}
+.vig .new{background:var(--ok-soft);flex:2}
+.vig .mk{position:absolute;top:0;transform:translateX(-50%);font-size:11.5px;text-align:center;white-space:nowrap;color:var(--muted);line-height:1.25}
+.vig .mk::after{content:"";display:block;width:2px;height:12px;background:currentColor;margin:2px auto 0}
+.vig .mk.me{color:var(--brand-ink);font-weight:700}
+@media (max-width:600px){.vig{padding-top:26px}.vig .mk{font-size:10.5px}.vig .mk .d{display:none}}
+.vig .lbls{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;gap:8px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:12px;margin-top:4px}
+.cal .wd{text-align:center;color:var(--muted);font-weight:700;padding:3px 0}
+.cal button{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:6px 0;cursor:pointer;font-size:12px}
+.cal button.inh{background:var(--risk-soft);color:var(--risk);border-color:transparent}
+.cal button.cnt{background:var(--ok-soft);color:var(--ok);border-color:transparent;font-weight:700}
+.cal button.pub{background:var(--info-soft);color:var(--info);border-color:transparent;font-weight:700}
+.cal button.end{background:#E6007E;color:#fff;border-color:transparent;font-weight:700}
+.cal span.em{visibility:hidden}
+.daynote{min-height:42px;margin-top:8px;font-size:13px;background:var(--soft);border-radius:8px;padding:8px 10px}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.chain span{border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12.5px;background:var(--panel)}
+.chain span.on{border-color:var(--risk);color:var(--risk);font-weight:700}
+.chain span.done{border-color:var(--ok);color:var(--ok);font-weight:700}
+.steps{margin:6px 0 0;padding-left:20px}
+.steps li{margin:4px 0}
+
+/* Contratos */
+.kanban{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+@media (max-width:800px){.kanban{grid-template-columns:1fr}}
+.colk{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px}
+.colk h3{font:700 13px var(--sans);color:var(--muted);margin:2px 4px 8px}
+.kcard{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;cursor:pointer}
+.kcard:hover{border-color:var(--brand)}
+.kcard[aria-pressed="true"]{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-soft)}
+.kcard b{display:block}
+.prog{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:10px 0 4px}
+.prog span{font-size:11.5px;text-align:center;color:var(--muted);padding-top:8px;border-top:4px solid var(--line)}
+.prog span.done{border-top-color:var(--ok);color:var(--ok)}
+.prog span.now{border-top-color:var(--brand);color:var(--brand-ink);font-weight:700}
+.docs{list-style:none;margin:8px 0 0;padding:0}
+.docs li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.docs .st{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--warn-soft);color:var(--warn)}
+.docs .st.ok{background:var(--ok-soft);color:var(--ok)}
+.docs .tx{flex:1}
+.docs .tx small{display:block;color:var(--muted)}
+
+/* Asistente de solicitud */
+.wsteps{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.wsteps span{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;border:1px solid var(--line);color:var(--muted);background:var(--panel)}
+.wsteps span.on{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.wsteps span.done{border-color:var(--ok);color:var(--ok)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.opts{grid-template-columns:1fr}}
+.opt{display:block;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:12px;cursor:pointer}
+.opt:hover{border-color:var(--brand)}
+.opt[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft)}
+.opt b{display:block}
+.result{border-radius:12px;padding:14px 16px;margin-top:6px}
+.result.ok{background:var(--ok-soft)}
+.result.go{background:var(--warn-soft)}
+
+/* Consulta */
+.chat{display:flex;flex-direction:column;gap:12px;min-height:220px}
+.q{align-self:flex-end;max-width:80%;background:var(--chrome);color:var(--chrome-ink);border-radius:14px 14px 3px 14px;padding:10px 14px}
+.a{align-self:flex-start;max-width:94%;background:var(--paper);border:1px solid var(--line);border-radius:14px 14px 14px 3px;padding:12px 14px;font:15.5px/1.6 var(--serif)}
+.a .meta{font:12.5px var(--sans);color:var(--muted);margin-top:8px}
+.ask{display:flex;gap:8px;margin-top:12px}
+.ask input{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--panel);color:var(--ink)}
+.sugg{display:flex;flex-direction:column;gap:8px}
+
+/* Agentes */
+.agent{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel);margin-bottom:8px}
+.meter{grid-column:1 / -1;height:6px;border-radius:999px;background:var(--soft);overflow:hidden;border:1px solid var(--line)}
+.meter span{display:block;height:100%;background:var(--brand)}
+.switch{border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;cursor:pointer;background:var(--ok-soft);color:var(--ok)}
+.switch.off{background:var(--soft);color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:700}
+.chip[disabled]{opacity:.45;cursor:not-allowed}
+.fld{margin-bottom:12px}
+.fld label,.fld .lb{display:block;font-weight:700;font-size:12.5px;margin-bottom:5px}
+.fld input[type=text],.fld textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--panel);color:var(--ink)}
+.fld textarea{min-height:64px;resize:vertical}
+.lock{font-size:12.5px;color:var(--ok);background:var(--ok-soft);border-radius:8px;padding:6px 10px;margin-top:6px}
+
+/* Panel */
+.sem{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.bars{display:flex;align-items:flex-end;gap:8px;height:110px;margin-top:8px}
+.bars div{flex:1;background:var(--brand-soft);border-radius:6px 6px 0 0;position:relative}
+.bars div span{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted)}
+
+/* Traza */
+.log td:first-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.you td{background:var(--brand-soft)}
+
+/* Cajón lateral */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100vw);background:var(--panel);border-left:1px solid var(--line);box-shadow:var(--shadow);z-index:40;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .2s ease;visibility:hidden}
+.drawer.open{transform:none;visibility:visible}
+.drawer header{display:flex;align-items:flex-start;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.drawer header h2{font-size:19px;flex:1}
+.drawer .body{padding:16px 18px;overflow:auto}
+.scrim{position:fixed;inset:0;background:rgba(20,8,14,.25);z-index:39;display:none}
+.scrim.on{display:block}
+
+/* Recorrido */
+.tour{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);width:min(720px,calc(100vw - 24px));background:#2A1220;color:#F7EEF3;border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;z-index:60;display:none}
+.tour.on{display:block}
+.tour .tt{font-family:var(--serif);font-size:18px;margin:2px 0 4px}
+.tour p{margin:0 0 10px;color:#EBDCE4}
+.tour .dots{display:flex;gap:5px}
+.tour .dots i{width:8px;height:8px;border-radius:50%;background:#6A3D57}
+.tour .dots i.on{background:#FF6BB5}
+.tour .btn{background:#3A1B2D;border-color:#5A3349;color:#F7EEF3}
+.tour .btn.pri{background:#E6007E;border-color:#E6007E;color:#fff}
+.spot{outline:3px solid var(--brand)!important;outline-offset:4px;border-radius:12px}
+.toast{position:fixed;top:64px;right:18px;z-index:70;background:var(--ink);color:var(--panel);border-radius:10px;padding:10px 14px;font-size:13.5px;max-width:340px;box-shadow:var(--shadow);opacity:0;transform:translateY(-6px);transition:all .2s;pointer-events:none}
+.toast.on{opacity:1;transform:none}
+.foot{font-size:12px;color:var(--muted);margin-top:28px;max-width:90ch}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <span class="wm">THIRDWISH</span>
+    <span class="prod">Plataforma jurídica</span>
+    <span class="day" id="clock">Jueves 3 de diciembre de 2026 · 07:05</span>
+    <span class="sp"></span>
+    <label class="day" for="role">Ver como</label>
+    <select id="role">
+      <option value="abogada">Abogada A · Contenciosa</option>
+      <option value="gerente">Gerente jurídico</option>
+      <option value="compras">Compras</option>
+    </select>
+    <button class="tbtn" id="ex-toggle" aria-pressed="true" title="Muestra u oculta para qué sirve cada apartado y cada recuadro">Explicaciones: sí</button>
+    <button class="tbtn" id="theme-toggle" aria-pressed="false" title="Cambia entre modo claro y oscuro">Modo oscuro</button>
+    <button class="tbtn pri" id="tour-start">Recorrido de 2 minutos</button>
+    <span class="fict">Datos ficticios</span>
+  </header>
+  <nav class="rail" id="rail" aria-label="Módulos"></nav>
+  <main id="view" tabindex="-1"></main>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-title" aria-hidden="true">
+  <header><h2 id="dr-title"></h2><button class="btn ghost" id="dr-close">Cerrar</button></header>
+  <div class="body" id="dr-body"></div>
+</aside>
+<div class="tour" id="tour" role="dialog" aria-live="polite" aria-label="Recorrido guiado">
+  <div class="row" style="justify-content:space-between"><div class="dots" id="tour-dots"></div><span class="small" id="tour-n" style="color:#CDB6C3"></span></div>
+  <div class="tt" id="tour-t"></div>
+  <p id="tour-p"></p>
+  <div class="row"><button class="btn" id="tour-prev">Anterior</button><button class="btn pri" id="tour-next">Siguiente</button><span style="flex:1"></span><button class="btn" id="tour-exit">Salir del recorrido</button></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+var $ = function(s, r){ return (r || document).querySelector(s); };
+var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+function purpose(sirve, puedes, con){ return '<div class="purpose"><b>Para qué sirve.</b> ' + sirve + (puedes ? ' <b>Qué puedes hacer.</b> ' + puedes : '') + (con ? '<span class="with">Con qué está hecho: ' + con + '</span>' : '') + '</div>'; }
+function why(t){ return '<p class="why">' + t + '</p>'; }
+
+/* ===================== Datos ===================== */
+var ICON = {
+  hoy:'<path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>',
+  nue:'<circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  vig:'<circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2" fill="none"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  imp:'<circle cx="12" cy="12" r="2.5" fill="currentColor"/><circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.2" fill="none" stroke-dasharray="2 3"/>',
+  pla:'<rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><path d="M4 10h16M9 3v4M15 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  con:'<path d="M7 3h7l4 4v14H7z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M10 12h5M10 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  cons:'<path d="M4 5h16v11H9l-5 4z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>',
+  age:'<circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>',
+  escr:'<path d="M5 19l1.5-5L16 4.5l3.5 3.5L10 17.5z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  pan:'<path d="M5 19V11M12 19V5M19 19v-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
+  tra:'<path d="M5 6h14M5 12h14M5 18h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="19" cy="18" r="2" fill="currentColor"/>'
+};
+var ROUTES = [
+  {id:'hoy', t:'Hoy', ic:'hoy'},
+  {id:'nueva', t:'Nueva solicitud', ic:'nue', only:'compras'},
+  {id:'vigilancia', t:'Vigilancia normativa', ic:'vig', h:['Módulos de trabajo','Conocimiento jurídico'], sub:true},
+  {id:'impacto', t:'Mapa de impacto', ic:'imp', sub:true},
+  {id:'consulta', t:'Consulta', ic:'cons', sub:true},
+  {id:'contratos', t:'Contratos', ic:'con'},
+  {id:'escritos', t:'Escritos', ic:'escr'},
+  {id:'plazos', t:'Plazos', ic:'pla'},
+  {id:'agentes', t:'Configuración de agentes', ic:'age', h:['Capacidades transversales']},
+  {id:'panel', t:'Panel de la gerencia', ic:'pan'},
+  {id:'traza', t:'Traza', ic:'tra'}
+];
+var PERM = {
+  abogada:['hoy','vigilancia','impacto','plazos','contratos','escritos','consulta','agentes','traza'],
+  gerente:['hoy','vigilancia','impacto','plazos','contratos','escritos','consulta','agentes','panel','traza'],
+  compras:['hoy','nueva','contratos','consulta','traza']
+};
+var ROLE_NAME = {abogada:'Abogada A · Gerencia Contenciosa', gerente:'Gerente jurídico', compras:'Usuario de Compras'};
+
+var CITES = {
+  lfpca65v:{t:'LFPCA, art. 65 · texto de 2016, el que rige hoy', real:true, src:'Decreto DOF 13/06/2016 (Cámara de Diputados)', txt:'«La notificación surtirá sus efectos al tercer día hábil siguiente a aquél en que se haya realizado la publicación en el Boletín Jurisdiccional o al día hábil siguiente a aquél en que las partes sean notificadas personalmente en las instalaciones designadas por el Tribunal».'},
+  lfpca65n:{t:'LFPCA, art. 65 · reforma DOF 09/06/2026', real:true, src:'Texto vigente publicado por la Cámara de Diputados', txt:'«La notificación surtirá sus efectos al segundo día hábil siguiente a aquél en que se haya realizado la publicación en el Boletín Jurisdiccional [...]».'},
+  trans3:{t:'Decreto DOF 09/06/2026 · transitorio tercero', real:true, src:'Texto vigente de la LFPCA, transitorios', txt:'Las disposiciones relativas a los plazos que se reforman y adicionan en los artículos [...] 65 y 73 «entrarán en vigor a partir de los doscientos cuarenta días naturales siguientes, a la fecha de publicación de este ordenamiento». Desde el 9 de junio de 2026, eso lleva al 4 de febrero de 2027.'},
+  lfpca74:{t:'LFPCA, art. 74', real:true, src:'Texto vigente', txt:'I. «Empezarán a correr a partir del día siguiente a aquél en que surta efectos la notificación». II. Si están fijados en días, «se computarán sólo los hábiles».'},
+  ss2:{t:'TFJA · Acuerdo SS/2/2026, calendario de suspensión de labores', real:true, src:'tfja.gob.mx', txt:'Inhábiles los sábados y domingos y, en diciembre, el lunes 14, del martes 15 al jueves 31 (segundo periodo vacacional) y el viernes 1 de enero de 2027.'},
+  pub4:{t:'CONSAR · Disposiciones de publicidad y promoción (DOF 15/12/2017), art. 4, fr. VIII', real:true, src:'DOF', txt:'Prohíbe a las Afores entregar datos de trabajadores a sus accionistas, a los grupos financieros a los que pertenezcan o a entidades relacionadas «con cualquier motivo, incluido el de promover cualquier producto o servicio». La fracción VII sí prevé el consentimiento y la VIII no.'},
+  lft13:{t:'Ley Federal del Trabajo, art. 13', real:true, src:'Texto vigente (reforma DOF 23/04/2021)', txt:'«Se permite la subcontratación de servicios especializados o de ejecución de obras especializadas que no formen parte del objeto social ni de la actividad económica preponderante de la beneficiaria de estos, siempre que el contratista esté registrado en el padrón público a que se refiere el artículo 15 de esta Ley». El artículo 12 prohíbe la subcontratación de personal.'},
+  lft15:{t:'Ley Federal del Trabajo, art. 15', real:true, src:'Texto vigente', txt:'«Las personas físicas o morales que proporcionen los servicios de subcontratación, deberán contar con registro ante la Secretaría del Trabajo y Previsión Social». El registro se renueva cada tres años.'},
+  lfpdppp:{t:'Ley Federal de Protección de Datos Personales en Posesión de los Particulares', real:true, src:'DOF 20/03/2025', txt:'Ley nueva publicada el 20 de marzo de 2025. La plataforma enlaza el artículo que Jurídico tenga validado para la relación con proveedores que tratan datos personales.'},
+  lpdusf50:{t:'LPDUSF, art. 50 Bis', real:true, src:'Texto vigente', txt:'«Cada Institución Financiera deberá contar con una Unidad Especializada que tendrá por objeto atender consultas y reclamaciones de los Usuarios».'},
+  lpdusf60:{t:'LPDUSF, art. 60', real:true, src:'Texto vigente', txt:'«La Comisión Nacional está facultada para actuar como conciliador entre las Instituciones Financieras y los Usuarios, con el objeto de proteger los intereses de estos últimos».'},
+  scjn7:{t:'SCJN · Acuerdo General 7/2025', real:true, src:'scjn.gob.mx', txt:'La Duodécima Época del Semanario Judicial de la Federación empieza el 1 de septiembre de 2025, con publicación semanal de tesis jurisprudenciales, tesis aisladas y sentencias.'},
+  ref31:{t:'Disposiciones de CONSAR · art. 31 (reforma ficticia de hoy)', real:false, src:'DOF de hoy · ejemplo ficticio', txt:'Los proveedores de servicios críticos deberán notificar a la Afore los incidentes de seguridad dentro de las veinticuatro horas siguientes a su detección.'},
+  ref12:{t:'Disposiciones de CONSAR · art. 12 (reforma ficticia de hoy)', real:false, src:'DOF de hoy · ejemplo ficticio', txt:'El reporte mensual se entregará dentro de los cinco días hábiles siguientes al cierre del mes.'},
+  of210:{t:'Oficio CONSAR 210/2026 (ficticio)', real:false, src:'Expediente · ejemplo ficticio', txt:'Notificado el viernes 27 de noviembre de 2026. Requiere el reporte regulatorio mensual de noviembre y la conciliación de cuentas del periodo, dentro de los diez días hábiles siguientes a su notificación.'},
+  crit:{t:'Criterio interno «Reporte regulatorio mensual» (ficticio)', real:false, src:'Repositorio interno · ejemplo', txt:'Cumplimiento entrega el reporte regulatorio mensual a CONSAR dentro de los diez días hábiles siguientes al cierre del mes. Hay que actualizarlo a cinco por la reforma de hoy.'},
+  req1482:{t:'Acuerdo del Juzgado de Distrito · amparo 1482/2026 (ficticio)', real:false, src:'Expediente · ejemplo ficticio', txt:'Requiere a la representación de Profuturo que exhiba copia certificada del poder con el que comparece.'},
+  poder:{t:'Actas y poderes · poder general para pleitos y cobranzas (ficticio)', real:false, src:'Repositorio corporativo · ejemplo', txt:'Poder otorgado en 2019 al apoderado del área contenciosa. En el repositorio no consta que se haya revocado, pero tampoco hay una confirmación reciente de que siga vigente.'},
+  pol:{t:'Política de Compras de Profuturo (ficticia)', real:false, src:'Repositorio interno · ejemplo', txt:'Servicios críticos: pena convencional con un máximo de al menos el 10% del valor mensual.'},
+  pol2:{t:'Política de Compras de Profuturo (ficticia) · documentos y firma directa', real:false, src:'Repositorio interno · ejemplo', txt:'Todo proveedor entrega acta constitutiva y poder de su representante y la opinión de cumplimiento del SAT. El contrato tipo de confidencialidad sin cambios puede ir a firma sin revisión de Jurídico. Cualquier otro contrato pasa por Jurídico.'}
+};
+
+var ALERTS = {
+  repse:{lvl:'warn', t:'Ver si es un servicio especializado y pedir el registro REPSE', d:'La cláusula tercera pone personal del proveedor a trabajar en Profuturo. No todo contrato de TI es subcontratación: lo decide Jurídico con el contrato delante. Si es un servicio especializado, el proveedor tiene que estar en el padrón de la STPS.', cite:'lft13', fix:'El Proveedor declara contar con el registro vigente ante la Secretaría del Trabajo y Previsión Social y se obliga a mantenerlo durante la vigencia del contrato.'},
+  dp:{lvl:'risk', t:'No hay cláusula de tratamiento de datos personales', d:'El proveedor tendrá acceso a datos de trabajadores y la cláusula de confidencialidad no regula su tratamiento.', cite:'lfpdppp', fix:'El Proveedor tratará los datos personales a los que tenga acceso solo para prestar los servicios, conforme a las instrucciones de Profuturo y a la ley de la materia, y los devolverá o suprimirá al terminar el contrato.'},
+  pena:{lvl:'warn', t:'Pena convencional por debajo de la política interna', d:'El máximo pactado es del 5% y la política de Compras pide al menos el 10% en servicios críticos.', cite:'pol', fix:'Por cada día de retraso el Proveedor pagará una pena convencional del 1% del valor mensual, con un máximo del 10%.'},
+  inc:{lvl:'risk', t:'El aviso de incidentes es más lento que lo que pide la reforma de hoy', d:'El contrato da 72 horas y el artículo 31 reformado pide 24. Lo detectó el mapa de impacto esta mañana.', cite:'ref31', fix:'El Proveedor notificará a Profuturo los incidentes de seguridad dentro de las veinticuatro horas siguientes a su detección.', nueva:true},
+  grupo:{lvl:'risk', t:'Deja pasar datos de trabajadores a empresas del grupo', d:'La cláusula octava permite compartir las bases de datos de la campaña con «empresas afiliadas». Las disposiciones de publicidad y promoción de CONSAR prohíben entregar datos de trabajadores al grupo con cualquier motivo, también para promover productos.', cite:'pub4', fix:'La Agencia no compartirá con terceros, incluidas las empresas del grupo de Profuturo, ningún dato de trabajadores, y solo lo usará para prestar los servicios contratados.'},
+  docs:{lvl:'warn', t:'Faltan documentos del proveedor', d:'La solicitud llegó sin todos los documentos que pide la política de Compras.', cite:'pol2', fix:'Documentos completos.'}
+};
+
+var CONTRACTS = {
+  ti:{t:'Servicios de TI', area:'Compras', p:'Proveedor ficticio, S.A. de C.V.', col:'juridico', alerts:['dp','repse','pena'],
+    nota:'Jurídico revisa la cláusula de datos personales y la pena convencional. Como el proveedor pondrá personal a trabajar en Profuturo, te pide su registro REPSE.',
+    docs:[{n:'Registro REPSE del proveedor', w:'Jurídico lo trata como servicio especializado porque su personal trabajará en Profuturo. En ese caso la ley pide el registro ante la STPS.', ok:false, cite:'lft13'},{n:'Acta constitutiva y poder del representante', ok:true},{n:'Opinión de cumplimiento del SAT', ok:true}],
+    clauses:[
+    {n:'Primera', h:'Objeto', x:'El Proveedor prestará a Profuturo servicios de soporte y mantenimiento de aplicaciones, conforme al anexo técnico.'},
+    {n:'Tercera', h:'Personal del Proveedor', x:'El Proveedor asignará personal propio, que podrá trabajar en las instalaciones de Profuturo bajo la dirección técnica del Proveedor.', a:'repse'},
+    {n:'Quinta', h:'Precio y forma de pago', x:'Profuturo pagará la contraprestación mensual pactada en el anexo económico, a 30 días de recibida la factura.'},
+    {n:'Séptima', h:'Confidencialidad', x:'El Proveedor guardará confidencialidad sobre la información de Profuturo durante la vigencia del contrato y dos años después.', a:'dp'},
+    {n:'Novena', h:'Pena convencional', x:'Por cada día de retraso el Proveedor pagará una pena convencional del 1% del valor mensual, con un máximo del 5%.', a:'pena'},
+    {n:'Décima', h:'Vigencia', x:'El contrato estará vigente doce meses a partir de su firma.'}
+  ]},
+  datos:{t:'Centro de datos', area:'Compras', p:'Operador ficticio de infraestructura', col:'juridico', alerts:['inc'],
+    nota:'La reforma de CONSAR de hoy cambia la cláusula de incidentes. Jurídico propone el texto nuevo; tú no tienes que hacer nada por ahora.',
+    docs:[{n:'Acta constitutiva y poder del representante', ok:true},{n:'Opinión de cumplimiento del SAT', ok:true},{n:'Anexo de seguridad del proveedor', ok:true}],
+    clauses:[
+    {n:'Primera', h:'Objeto', x:'El Proveedor alojará y operará la infraestructura de Profuturo en su centro de datos, conforme al anexo de niveles de servicio.'},
+    {n:'Sexta', h:'Seguridad de la información', x:'El Proveedor mantendrá los controles de seguridad descritos en el anexo de seguridad y permitirá las auditorías que Profuturo requiera.'},
+    {n:'Undécima', h:'Incidentes', x:'El Proveedor notificará a Profuturo los incidentes de seguridad dentro de las setenta y dos horas siguientes a su detección.', a:'inc'},
+    {n:'Duodécima', h:'Vigencia', x:'El contrato estará vigente treinta y seis meses a partir de su firma.'}
+  ]},
+  contacto:{t:'Centro de contacto', area:'Compras', p:'Proveedor ficticio de servicios', col:'compras', alerts:['inc','dp'], resumen:'Borrador en Compras. La reforma de hoy también toca su cláusula de incidentes.',
+    nota:'Antes de mandarlo a Jurídico, pide al proveedor su anexo de seguridad: la reforma de hoy obliga a avisar de incidentes en 24 horas.',
+    docs:[{n:'Acta constitutiva y poder del representante', ok:true},{n:'Opinión de cumplimiento del SAT', ok:true},{n:'Anexo de seguridad con aviso de incidentes en 24 horas', w:'Lo pide la reforma de CONSAR publicada hoy (ficticia).', ok:false, cite:'ref31'}]},
+  arrend:{t:'Arrendamiento de oficinas', area:'Compras', p:'Inmobiliaria ficticia', col:'compras', alerts:['pena'], resumen:'Devuelto a Compras con un comentario sobre la pena convencional.',
+    nota:'Jurídico te lo devolvió: negocia con el arrendador una pena convencional con un máximo del 10%, como pide la política. Cuando la aceptes, vuelve a enviarlo.',
+    docs:[{n:'Escritura del inmueble', ok:true},{n:'Acta constitutiva y poder del representante', ok:true}]},
+  nda:{t:'Confidencialidad', area:'Compras', p:'Consultora ficticia', col:'firma', alerts:[], resumen:'Contrato tipo sin cambios: va directo a firma.',
+    nota:'Contrato tipo sin cambios. Según la política, fue directo a firma sin esperar a Jurídico.',
+    docs:[{n:'Acta constitutiva y poder del representante', ok:true}]},
+  pub:{t:'Agencia de publicidad', area:'Mercadotecnia', p:'Agencia ficticia de comunicación', col:'juridico', alerts:['grupo','dp'],
+    docs:[{n:'Acta constitutiva y poder del representante', ok:true},{n:'Opinión de cumplimiento del SAT', ok:true}],
+    clauses:[
+    {n:'Primera', h:'Objeto', x:'La Agencia diseñará y ejecutará la campaña de comunicación sobre ahorro voluntario de Profuturo, conforme al brief anexo.'},
+    {n:'Cuarta', h:'Contraprestación', x:'Profuturo pagará los honorarios pactados en el anexo económico, contra entrega de cada fase de la campaña.'},
+    {n:'Séptima', h:'Confidencialidad', x:'La Agencia guardará confidencialidad sobre la información de Profuturo durante la vigencia del contrato.', a:'dp'},
+    {n:'Octava', h:'Uso de la información', x:'La Agencia podrá compartir la información de la campaña, incluidas las bases de datos de contacto, con empresas afiliadas a Profuturo para fines promocionales.', a:'grupo'},
+    {n:'Décima', h:'Vigencia', x:'El contrato estará vigente seis meses a partir de su firma.'}
+  ]}
+};
+
+var ESCRITOS = {
+  csr:{t:'Respuesta al oficio CONSAR 210/2026', via:'Administrativa', org:'CONSAR', plazo:'csr', vence:'Vie 11/12', quien:'Abogada E · revisa el gerente', ag:'Respuestas a oficios',
+    fuentes:[['Oficio CONSAR 210/2026','of210'],['Criterio interno «Reporte regulatorio mensual»','crit'],['Reforma de hoy, art. 12','ref12']],
+    secs:[
+      {h:'Antecedentes', x:'Mediante el oficio 210/2026, notificado el 27 de noviembre de 2026, esa Comisión requirió a Profuturo el reporte regulatorio mensual de noviembre y la conciliación de cuentas del periodo.'},
+      {h:'Información que se entrega', x:'Se adjuntan como anexo 1 el reporte regulatorio mensual de noviembre de 2026 y como anexo 2 la conciliación de cuentas del periodo.', p:'an1'},
+      {h:'Fundamento', x:'El reporte se entrega conforme al artículo 12 de las disposiciones de carácter general, en su texto reformado hoy, que fija cinco días hábiles desde el cierre del mes.', p:'rev'},
+      {h:'Petición', x:'Por lo expuesto, se solicita tener por atendido en tiempo y forma el requerimiento.'}
+    ],
+    pend:{an1:{t:'Falta el anexo 1: el reporte de noviembre', d:'El expediente tiene el oficio y el criterio interno, pero no el reporte firmado por Cumplimiento. El agente no lo inventa: lo deja marcado.', b:'Lo subió Cumplimiento', ok:'Anexo 1 incorporado', m:'anexo 1, reporte de noviembre'},
+          rev:{t:'Confirmar el fundamento y quién firma', d:'El agente propone el artículo 12 reformado porque la reforma salió hoy. El fundamento y la firma los confirma el abogado.', b:'Confirmo fundamento y firma', ok:'Fundamento confirmado', m:'confirmar fundamento y firma'}}},
+  amp:{t:'Desahogo del requerimiento · amparo indirecto 1482/2026', via:'Judicial', org:'Juzgado de Distrito', plazo:'amp', vence:'Lun 07/12', quien:'Abogado C · suplente Abogada A', ag:'Agenda de amparo',
+    fuentes:[['Acuerdo del juzgado','req1482'],['Actas y poderes','poder']],
+    secs:[
+      {h:'Comparecencia', x:'[Nombre del apoderado], en representación de Profuturo en el juicio de amparo indirecto 1482/2026, comparezco para desahogar el requerimiento formulado por ese Juzgado.'},
+      {h:'Desahogo', x:'Exhibo copia certificada del poder con el que actúo, como se me requirió.', p:'poder'},
+      {h:'Petición', x:'Se tenga por desahogado en tiempo el requerimiento y por exhibido el documento.'}
+    ],
+    pend:{poder:{t:'Confirmar que el poder de 2019 sigue vigente', d:'En Actas y poderes hay un poder de 2019 sin revocación registrada. El agente no puede saber si sigue vigente: lo confirma el abogado.', b:'Poder vigente confirmado', ok:'Poder confirmado', m:'confirmar que el poder sigue vigente'}}}
+};
+
+var PLAZOS = {
+  amp:{asunto:'Amparo indirecto 1482/2026', org:'Juzgado de Distrito', que:'Requerimiento del juzgado', vence:'Lun 07/12', quien:'Abogado C · suplente Abogada A', est:['Urgente: escalado','t-risk']},
+  nul:{asunto:'Juicio de nulidad 2851/2026', org:'TFJA', que:'Acuerdo nuevo · plazo de 10 días hábiles (ejemplo)', vence:'Mar 12/01/2027', quien:'Abogada A · suplente Abogado B', est:['Por confirmar','t-warn']},
+  cdf:{asunto:'Reclamación 4127/2026', org:'CONDUSEF', que:'Audiencia de conciliación, con la UNE', vence:'Mié 09/12 · 12:00', quien:'Abogado B · suplente Abogada D', est:['En agenda','t-ok']},
+  lab:{asunto:'Demanda laboral 973/2026', org:'Tribunal laboral federal', que:'Audiencia', vence:'Jue 10/12 · 10:00', quien:'Abogada D · suplente Abogado C', est:['En agenda','t-ok']},
+  csr:{asunto:'Oficio CONSAR 210/2026', org:'CONSAR', que:'Requerimiento de información · toca el art. 12 reformado hoy', vence:'Vie 11/12', quien:'Abogada E · suplente Abogado F', est:['En plazo','t-ok']}
+};
+
+var QA = [
+  {q:'¿Cuándo surte efectos hoy una notificación del TFJA por Boletín Jurisdiccional?', a:'Hoy, al tercer día hábil siguiente a su publicación en el Boletín Jurisdiccional. La reforma publicada el 9 de junio de 2026 lo cambia al segundo día hábil, pero su transitorio tercero la pone en vigor a los 240 días naturales, hacia el 4 de febrero de 2027. Los plazos corren desde el día siguiente a aquel en que surte efectos y solo cuentan los días hábiles.', c:['lfpca65v','lfpca65n','trans3','lfpca74']},
+  {q:'¿La Afore puede entregar datos de sus trabajadores a empresas de su grupo si el trabajador da su consentimiento?', a:'No. Las Disposiciones de publicidad y promoción de CONSAR lo prohíben en su artículo 4, fracción VIII, «con cualquier motivo». La fracción VII sí prevé el consentimiento y la VIII no.', c:['pub4']},
+  {q:'¿Todo proveedor de TI necesita registro REPSE?', a:'No. Depende de si el contrato es subcontratación de servicios especializados, es decir, si el proveedor pone personal propio a prestar el servicio a Profuturo y ese servicio no forma parte de su objeto social ni de su actividad preponderante. Si lo es, el contratista tiene que estar en el padrón de la STPS, con registro renovado cada tres años. Lo decide Jurídico con el contrato delante.', c:['lft13','lft15']},
+  {q:'¿Quién atiende las reclamaciones de los usuarios y quién concilia?', a:'Cada institución financiera debe tener una Unidad Especializada para consultas y reclamaciones. CONDUSEF puede actuar como conciliadora entre la institución y el usuario.', c:['lpdusf50','lpdusf60']},
+  {q:'¿Cómo va a resolver la nueva Suprema Corte las demandas de devolución de recursos en 2027?', a:'No encuentro respaldo para responder eso. Puedo enseñarte las tesis publicadas sobre devolución de recursos desde el 1 de septiembre de 2025, en la Duodécima Época, pero no anticipo criterios que no existen.', c:['scjn7'], none:true}
+];
+var QA_C = [
+  {q:'¿Qué documentos pide Jurídico para contratar un proveedor de servicios?', a:'Acta constitutiva y poder del representante, y la opinión de cumplimiento del SAT, según la política de Compras. Si el proveedor pone personal propio a trabajar para Profuturo, Jurídico mira si es un servicio especializado. Si lo es, te pedirá también su registro ante la STPS (REPSE).', c:['pol2','lft13']},
+  {q:'¿Cuándo puedo mandar un contrato a firma sin pasar por Jurídico?', a:'Cuando usas el contrato tipo de confidencialidad sin cambios, según la política de Compras. En cualquier otro caso la plataforma hace la primera revisión y lo pasa a Jurídico.', c:['pol2']},
+  {q:'¿Por qué Jurídico me pide cambiar la cláusula de incidentes?', a:'Porque la reforma de CONSAR publicada hoy pide que los proveedores críticos avisen de incidentes en 24 horas. Los contratos de centro de datos y de centro de contacto daban 72.', c:['ref31']}
+];
+
+var AGENTS = [
+  {n:'Revisor de contratos', mod:'Contratos', g:'Corporativa', src:['Contratos','Políticas internas'], m:'Local', pct:62, on:true},
+  {n:'Respuestas a oficios', mod:'Escritos', g:'Corporativa', src:['Portal de CONSAR','Expedientes'], m:'Local', pct:18, on:true},
+  {n:'Vigía de CONSAR', mod:'Conocimiento jurídico', g:'Corporativa', src:['DOF','Portal de CONSAR'], m:'Nube', pct:35, on:true},
+  {n:'Agenda de amparo', mod:'Plazos', g:'Contenciosa', src:['Portal del PJF','Expedientes'], m:'Local', pct:48, on:true},
+  {n:'Contestaciones laborales', mod:'Escritos', g:'Contenciosa', src:['Expedientes','Semanario Judicial'], m:'Local', pct:71, on:true},
+  {n:'Impacto normativo', mod:'Conocimiento jurídico', g:'Ambas', src:['DOF','Semanario Judicial','Contratos'], m:'Local', pct:22, on:true},
+  {n:'Calendario corporativo', mod:'Plazos', g:'Corporativa', src:['Actas y poderes'], m:'Local', pct:15, on:true}
+];
+var SOURCES = ['DOF','Portal de CONSAR','Semanario Judicial','Boletín del TFJA','Portal del PJF','Cámara de Diputados','Expedientes','Contratos','Actas y poderes'];
+var SENSIBLE = ['Expedientes','Contratos','Actas y poderes'];
+
+var TIPOS = {
+  nda:{t:'Confidencialidad', d:'Contrato tipo para compartir información con un proveedor.', docs:['Acta constitutiva y poder del representante']},
+  serv:{t:'Prestación de servicios', d:'Servicios con personal del proveedor, como soporte o centro de contacto.', docs:['Acta constitutiva y poder del representante','Opinión de cumplimiento del SAT','Registro REPSE, si es un servicio especializado con personal en Profuturo']},
+  soft:{t:'Licencia de software', d:'Uso de una aplicación o servicio en la nube.', docs:['Acta constitutiva y poder del representante','Opinión de cumplimiento del SAT','Anexo de protección de datos']},
+  arr:{t:'Arrendamiento', d:'Oficinas, bodegas o equipos.', docs:['Acta constitutiva y poder del representante','Escritura o título del bien']}
+};
+
+/* ===================== Estado ===================== */
+var S = {
+  role:'abogada', route:'hoy', param:null, mins:7*60+5,
+  vigSel:'ref', artSel:'12', mapSel:null, plaSel:'nul', regla:'vigente', dayNote:'',
+  conSel:'ti', clauseSel:null, fixed:{}, cols:{}, confirmed:{}, avisado:{}, areaF:'todas',
+  escSel:'csr', escOk:{}, escEd:{}, escFirma:{},
+  chat:[], chatC:[], agents:AGENTS.slice(), draft:{n:'', mod:'Conocimiento jurídico', src:['DOF'], m:'Nube', tope:40, avisa:['Jurídico Corporativo']},
+  wiz:{step:1, tipo:null, prov:'', monto:null, cambios:null, docs:{}, done:null}, nuevos:0,
+  logFilter:'todo',
+  log:[
+    {h:'07:05', who:'Respuestas a oficios', ag:true, a:'Prepara el borrador de respuesta al oficio CONSAR 210/2026 con el art. 12 reformado hoy y marca el anexo 1 como pendiente'},
+    {h:'07:05', who:'Revisor de contratos', ag:true, c:true, a:'Primera revisión de Servicios de TI: 3 alertas con su cita y un documento pedido a Compras'},
+    {h:'07:04', who:'Revisor de contratos', ag:true, a:'Primera revisión del contrato de la agencia de publicidad de Mercadotecnia: 2 alertas con su cita'},
+    {h:'07:04', who:'Módulo de plazos', ag:true, a:'Registra el acuerdo del TFJA en el juicio 2851/2026 y aplica el art. 65 en su texto de 2016 por el transitorio tercero de la reforma'},
+    {h:'07:03', who:'Agenda de amparo', ag:true, a:'Escala a la gerencia el requerimiento del amparo 1482/2026 tras 2 horas sin confirmar'},
+    {h:'07:02', who:'Agenda de amparo', ag:true, a:'Nuevo requerimiento en el amparo 1482/2026; aviso al responsable y al suplente y borrador del desahogo con el poder por confirmar'},
+    {h:'07:01', who:'Impacto normativo', ag:true, c:true, a:'Cruza la reforma con contratos, criterios y asuntos: 2 contratos, 1 criterio y 1 asunto. Avisa a Compras del centro de contacto'},
+    {h:'07:00', who:'Vigía de CONSAR', ag:true, a:'Detecta en el DOF una reforma a disposiciones de CONSAR y la compara con el texto vigente'}
+  ]
+};
+Object.keys(CONTRACTS).forEach(function(k){ S.cols[k] = CONTRACTS[k].col; });
+function mine(){ return Object.keys(CONTRACTS).filter(function(id){ return CONTRACTS[id].area === 'Compras'; }); }
+function escOpen(id){ return Object.keys(ESCRITOS[id].pend).filter(function(k){ return !S.escOk[id + ':' + k]; }).length; }
+
+function hhmm(m){ var h = Math.floor(m/60), mi = m%60; return (h<10?'0':'')+h+':'+(mi<10?'0':'')+mi; }
+function log(a, c){
+  S.mins += 1;
+  S.log.unshift({h:hhmm(S.mins), who:'Tú · ' + ROLE_NAME[S.role], you:true, c:c || S.role === 'compras', a:a});
+  $('#clock').textContent = 'Jueves 3 de diciembre de 2026 · ' + hhmm(S.mins);
+}
+var toastT;
+function toast(msg){ var t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2800); }
+
+/* ===================== Navegación ===================== */
+function go(route, param){
+  var h = '#/' + route + (param ? '/' + param : '');
+  if (location.hash === h){ parse(); render(); } else location.hash = h;
+}
+function parse(){
+  var p = (location.hash || '#/hoy').replace(/^#\//,'').split('/');
+  S.route = ROUTES.some(function(r){ return r.id === p[0]; }) ? p[0] : 'hoy';
+  S.param = p[1] || null;
+  if (S.route === 'plazos' && S.param && PLAZOS[S.param]) S.plaSel = S.param;
+  if (S.route === 'contratos' && S.param && CONTRACTS[S.param]) S.conSel = S.param;
+  if (S.route === 'vigilancia' && S.param) S.vigSel = S.param;
+  if (S.route === 'escritos' && S.param && ESCRITOS[S.param]) S.escSel = S.param;
+}
+window.addEventListener('hashchange', function(){ parse(); render(); if (!tourOn){ $('#view').focus({preventScroll:true}); window.scrollTo(0,0); } });
+
+function rail(){
+  var allowed = PERM[S.role];
+  var pend = mine().filter(function(id){ return (CONTRACTS[id].docs || []).some(function(d){ return !d.ok; }); }).length;
+  var counts = S.role === 'compras' ? {hoy:pend, contratos:mine().length} : {hoy:7, vigilancia:4, impacto:4, plazos:5, contratos:Object.keys(CONTRACTS).length, escritos:Object.keys(ESCRITOS).length, agentes:S.agents.length};
+  $('#rail').innerHTML = ROUTES.filter(function(r){ return !r.only || r.only === S.role; }).map(function(r){
+    var lock = allowed.indexOf(r.id) < 0;
+    return (r.h ? r.h.map(function(x, i){ return '<div class="grp' + (i ? ' sub' : '') + '">' + x + '</div>'; }).join('') : '') + '<button data-go="' + r.id + '"' + (S.route === r.id ? ' aria-current="page"' : '') + ' class="' + (lock ? 'locked' : '') + (r.sub ? ' sub' : '') + '">' +
+      '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">' + ICON[r.ic] + '</svg><span>' + r.t + '</span>' +
+      (lock ? '<span class="n">sin permiso</span>' : (counts[r.id] ? '<span class="n">' + counts[r.id] + '</span>' : '')) + '</button>';
+  }).join('') + '<div class="sep"></div><div class="who">Sesión: ' + esc(ROLE_NAME[S.role]) + '. ' + (S.role === 'compras' ? 'Compras ve sus contratos y lo que le pide Jurídico. Los módulos jurídicos están bloqueados.' : 'Los permisos los fija Profuturo por rol.') + '</div>';
+}
+
+/* ===================== Vistas ===================== */
+var V = {};
+
+V.hoy = function(){
+  if (S.role === 'compras') return hoyCompras();
+  var w = '<div class="welcome" id="welcome"><div><b>Buenos días. Los agentes trabajan desde las 7:00.</b><div class="small" style="color:#CDB6C3">Revisaron el DOF, el Semanario Judicial y los boletines, y dejaron aquí lo que te toca.</div></div><button class="btn pri" data-act="tour">Ver el recorrido de 2 minutos</button></div>';
+  var kpis = '<div class="grid4">' +
+    kpi('5','Plazos y audiencias', S.confirmed.amp ? 'Todo confirmado' : '1 urgente, escalado','plazos') +
+    kpi('4','Elementos afectados','por la reforma de CONSAR','impacto') +
+    kpi(String(Object.keys(CONTRACTS).filter(function(id){ return S.cols[id] === 'juridico'; }).length),'Contratos en Jurídico','uno con 3 alertas abiertas','contratos') +
+    kpi('3','Tesis nuevas','2 asuntos relacionados','vigilancia/scjn') + '</div>';
+  var cards = [
+    card('urg','Amparo','Requerimiento en el amparo indirecto 1482/2026', S.confirmed.amp ? 'Lo atiendes tú. Confirmado.' : 'Vence el lunes 7. El responsable no confirmó en 2 horas y se escaló a la gerencia. El borrador del desahogo está listo.', [[S.confirmed.amp ? 'Confirmado' : 'Lo atiendo yo','act:confirm:amp'],['Ver borrador','go:escritos/amp'],['Ver plazo','go:plazos/amp']]),
+    card('','DOF','Reforma a disposiciones de CONSAR (ficticia)','Cambian 3 artículos. Toca 2 contratos de Compras, 1 criterio interno y 1 oficio abierto.', [['Ver el cambio','go:vigilancia/ref'],['Mapa de impacto','go:impacto']]),
+    card('','CONSAR','Respuesta al oficio 210/2026: borrador listo', escOpen('csr') ? 'El agente armó la respuesta con la regla nueva. Quedan ' + escOpen('csr') + (escOpen('csr') === 1 ? ' pendiente' : ' pendientes') + ', entre ellos el anexo del reporte de noviembre.' : 'Pendientes resueltos. Listo para firma.', [['Abrir borrador','go:escritos/csr'],['Ver plazo','go:plazos/csr']]),
+    card('','TFJA','Juicio de nulidad 2851/2026: acuerdo nuevo','Vence el martes 12 de enero de 2027. Rige el art. 65 en su texto de 2016, no el reformado.', [['Ver cómputo','go:plazos/nul']]),
+    card('','Compras','Servicios de TI: 3 alertas','Primera revisión hecha frente al contrato tipo, la política de Compras y la ley.', [['Revisar contrato','go:contratos/ti']]),
+    card('','Mercadotecnia','Agencia de publicidad: 2 alertas','Una cláusula deja pasar datos de trabajadores a empresas del grupo. CONSAR lo prohíbe.', [['Revisar contrato','go:contratos/pub']]),
+    card('','SCJN','3 tesis nuevas esta semana (ficticias)','Dos tocan demandas laborales abiertas de la Gerencia Contenciosa.', [['Ver tesis','go:vigilancia/scjn']])
+  ];
+  return '<div class="head"><div><h1>Lo que te toca hoy</h1><p>Ordenado por urgencia. Cada tarjeta lleva a su detalle.</p></div></div>' +
+    purpose('Que cada abogado empiece el día sabiendo qué le toca, sin revisar a mano el DOF ni los boletines.', 'Abrir cualquier tarjeta, confirmar un plazo o lanzar el recorrido. Las rutas cambian en la barra de direcciones, así que el botón Atrás funciona.', 'los agentes de WEAVER, que revisan las fuentes desde las 7:00, y el módulo de plazos.') +
+    w + why('Resumen del día. Cada número abre su lista.') + kpis +
+    '<p class="sect">Lo que necesita tu atención</p>' + why('Lo urgente y lo escalado va primero. Cada tarjeta tiene su acción.') + '<div class="feed" id="hoy-list">' + cards.join('') + '</div>' + foot();
+};
+function hoyCompras(){
+  var ids = mine(), pide = ids.filter(function(id){ return (CONTRACTS[id].docs || []).some(function(d){ return !d.ok; }); });
+  var enJur = ids.filter(function(id){ return S.cols[id] === 'juridico'; }).length, firma = ids.filter(function(id){ return S.cols[id] === 'firma'; }).length;
+  var cards = pide.map(function(id){ var x = CONTRACTS[id], d = x.docs.filter(function(dd){ return !dd.ok; })[0];
+    return card('ask','Te pide', x.t + ': ' + d.n, d.w || x.nota, [['Subir documento','act:upload:' + id + ':' + x.docs.indexOf(d)],['Ver contrato','go:contratos/' + id]]); });
+  if (S.cols.arrend === 'compras') cards.push(card('ask','Devuelto','Arrendamiento de oficinas', CONTRACTS.arrend.nota, [['Ya lo negocié: reenviar','act:resend:arrend'],['Ver contrato','go:contratos/arrend']]));
+  cards.push(card('','Firma','Confidencialidad: listo para firma', CONTRACTS.nda.nota, [['Ver contrato','go:contratos/nda']]));
+  return '<div class="head"><div><h1>Tus contratos</h1><p>Qué te pide Jurídico hoy y en qué punto está cada contrato.</p></div><button class="btn pri" data-go="nueva">Nueva solicitud</button></div>' +
+    purpose('Que Compras sepa en qué punto está cada contrato y qué le falta, sin escribir a Jurídico para preguntar. Es el otro lado de los 300 contratos al año: si llegan completos, Jurídico tarda menos.', 'Subir lo que te piden, reenviar un contrato devuelto o empezar una solicitud nueva con el contrato tipo.', 'la asistencia legal que construimos para Loomis, con su flujo entre Negocio, Legal y Operaciones.') +
+    why('Tu resumen. Cada número abre tus contratos.') +
+    '<div class="grid4">' + kpi(String(pide.length + (S.cols.arrend === 'compras' ? 1 : 0)),'Te piden algo','documentos o cambios','contratos') + kpi(String(enJur),'En Jurídico','primera revisión ya hecha','contratos') + kpi(String(firma),'Listos para firma','sin esperar más','contratos') + kpi('2.4 días','Tiempo medio en Jurídico','este mes · ficticio','contratos') + '</div>' +
+    '<p class="sect">Lo que te pide Jurídico</p>' + why('En lenguaje llano y con el porqué. Al subir el documento, el contrato sigue su camino.') + '<div class="feed" id="hoy-list">' + cards.join('') + '</div>' + foot();
+}
+function kpi(v,l,s,route){ return '<button class="kpi" data-go="' + route + '"><span class="v">' + v + '</span><span class="l">' + l + '</span><span class="s">' + s + '</span></button>'; }
+function card(cls,src,t,p,acts){
+  return '<div class="card ' + cls + '"><span class="src">' + src + '</span><div><h3>' + esc(t) + '</h3><p>' + esc(p) + '</p></div><div class="acts">' +
+    acts.map(function(a, i){ var k = a[1].split(':'); var attr = k[0] === 'go' ? 'data-go="' + k.slice(1).join(':') + '"' : 'data-act="' + k.slice(1).join(':') + '"'; return '<button class="btn' + (i === 0 ? ' pri' : '') + '" ' + attr + '>' + esc(a[0]) + '</button>'; }).join('') + '</div></div>';
+}
+
+V.vigilancia = function(){
+  var items = [
+    {id:'ref', src:'DOF', t:'Reforma a disposiciones de carácter general de CONSAR', tag:['Ficticio','t-fict']},
+    {id:'lfpca', src:'DOF', t:'LFPCA: la reforma de junio cambia el art. 65, con entrada en vigor diferida', tag:['Real','t-real']},
+    {id:'scjn', src:'SCJN', t:'Semanario Judicial: 3 tesis nuevas de esta semana', tag:['Ficticio','t-fict']},
+    {id:'cam', src:'Cámara', t:'Leyes Federales Vigentes: textos actualizados sin cambios que afecten a Profuturo', tag:['Ejemplo','t-info']}
+  ];
+  var list = '<div class="list" id="vig-list">' + items.map(function(i){ return '<button class="li" data-act="vig:' + i.id + '" aria-pressed="' + (S.vigSel === i.id) + '"><span class="small muted">' + i.src + '</span><b>' + esc(i.t) + '</b><span class="tag ' + i.tag[1] + '">' + i.tag[0] + '</span></button>'; }).join('') + '</div>';
+  return '<div class="head"><div><h1>Vigilancia normativa</h1><p>Lo que publicaron hoy las fuentes que sigue el equipo, comparado con el texto vigente.</p></div></div>' +
+    purpose('Tener la normativa al día sin cargarla a mano. Cada agente recorre su fuente con su calendario (DOF, CONSAR, SCJN, Cámara de Diputados) y compara cada publicación con el texto vigente.', 'Elegir una publicación, cambiar de artículo, ver a qué afecta y avisar a otra área.', 'WEAVER para los barridos programados y el método de extracción jurídica que hicimos para Loomis.') +
+    '<div class="grid2"><div class="box"><h2>Publicado hoy</h2>' + why('Una línea por publicación. La etiqueta dice si el ejemplo es real o ficticio.') + list + '</div><div id="vig-detail">' + vigDetail() + '</div></div>' + foot();
+};
+function vigDetail(){
+  if (S.vigSel === 'ref'){
+    var A = {
+      '12':{old:'El reporte mensual se entregará dentro de los <del>diez</del> días hábiles siguientes al cierre del mes.', nu:'El reporte mensual se entregará dentro de los <ins>cinco</ins> días hábiles siguientes al cierre del mes.', imp:'Toca el criterio interno «Reporte regulatorio mensual» y el oficio CONSAR 210/2026.'},
+      '31':{old:'<del>Sin disposición equivalente.</del>', nu:'<ins>Los proveedores de servicios críticos deberán notificar a la Afore los incidentes de seguridad dentro de las veinticuatro horas siguientes a su detección.</ins>', imp:'Toca los contratos de Centro de datos y Centro de contacto.'},
+      '47':{old:'Los expedientes electrónicos se conservarán durante <del>cinco</del> años.', nu:'Los expedientes electrónicos se conservarán durante <ins>diez</ins> años.', imp:'Revisado: no toca ningún contrato, criterio ni asunto abierto.'}
+    }[S.artSel];
+    return why('Comparación artículo por artículo: a la izquierda lo que rige, a la derecha lo nuevo. Debajo, a qué afecta en Profuturo.') + '<div class="paper" id="vig-paper"><h3>DIARIO OFICIAL DE LA FEDERACIÓN · EDICIÓN MATUTINA · EJEMPLO FICTICIO</h3>' +
+      '<div style="font-size:19px;margin-bottom:12px">Resolución que reforma las disposiciones de carácter general de la CONSAR</div>' +
+      '<div class="tabs" role="group" aria-label="Artículos">' + ['12','31','47'].map(function(a){ return '<button class="tab" data-act="art:' + a + '" aria-pressed="' + (S.artSel === a) + '">Artículo ' + a + '</button>'; }).join('') + '</div>' +
+      '<div class="diff"><div class="col"><h3>TEXTO VIGENTE</h3><p class="art">' + A.old + '</p></div><div class="col new"><h3>TEXTO REFORMADO</h3><p class="art">' + A.nu + '</p></div></div>' +
+      '<p style="font:14px/1.5 var(--sans);margin:12px 0 0"><b>A qué afecta en Profuturo:</b> ' + A.imp + '</p>' +
+      '<div class="row" style="margin-top:12px;font-family:var(--sans)"><button class="btn pri" data-go="impacto">Ver mapa de impacto</button>' +
+      '<button class="btn" data-act="avisar"' + (S.avisado.cump ? ' disabled' : '') + '>' + (S.avisado.cump ? 'Cumplimiento avisado' : 'Avisar a Cumplimiento') + '</button>' +
+      '<button class="cite" data-cite="ref' + (S.artSel === '31' ? '31' : '12') + '">Ver texto del DOF</button></div></div>';
+  }
+  if (S.vigSel === 'lfpca'){
+    return why('Un caso real: el texto publicado no es el que rige. La plataforma lee también los transitorios.') + '<div class="paper"><h3>LEY FEDERAL DE PROCEDIMIENTO CONTENCIOSO ADMINISTRATIVO · TEXTOS REALES</h3>' +
+      '<div style="font-size:19px;margin-bottom:12px">Artículo 65: cuándo surte efectos la notificación por Boletín Jurisdiccional</div>' +
+      '<div class="diff"><div class="col"><h3>RIGE HOY · TEXTO DE 2016</h3><p class="art">La notificación surtirá sus efectos al <del>tercer</del> día hábil siguiente a aquél en que se haya realizado la publicación en el Boletín Jurisdiccional.</p></div>' +
+      '<div class="col new"><h3>PUBLICADO EL 9/06/2026 · AÚN NO RIGE</h3><p class="art">La notificación surtirá sus efectos al <ins>segundo</ins> día hábil siguiente a aquél en que se haya realizado la publicación en el Boletín Jurisdiccional.</p></div></div>' +
+      '<p style="font:14px/1.5 var(--sans);margin:12px 0 0"><b>Lo que se escapa al leer solo el texto:</b> el transitorio tercero lo pone en vigor a los 240 días naturales, hacia el 4 de febrero de 2027. La plataforma aplica en cada plazo la regla que rige en la fecha del acto.</p>' +
+      '<div class="row" style="margin-top:12px;font-family:var(--sans)"><button class="btn pri" data-go="plazos/nul">Ver cómo afecta a un plazo</button><button class="cite" data-cite="trans3">Transitorio tercero</button><button class="cite" data-cite="lfpca65v">Texto de 2016</button><button class="cite" data-cite="lfpca65n">Texto reformado</button></div></div>';
+  }
+  if (S.vigSel === 'scjn'){
+    var T = [['Devolución de recursos de la cuenta individual a beneficiarios','Demanda laboral 973/2026','lab'],['Prueba de la relación laboral en conflictos de seguridad social','Demanda laboral 973/2026','lab'],['Interés legítimo en amparo contra disposiciones generales','Sin asuntos relacionados','']];
+    return '<div class="box"><h2>Semanario Judicial · esta semana</h2>' + why('Tesis nuevas enlazadas con los asuntos abiertos en los que pueden pesar.') + '<p class="muted small">Tesis ficticias para la demo. La SCJN publica cada semana desde el 1 de septiembre de 2025, en la Duodécima Época. <button class="cite" data-cite="scjn7">Acuerdo General 7/2025</button></p>' +
+      '<div class="list">' + T.map(function(t){ return '<div class="li" style="cursor:default"><span class="tag t-fict">Ficticia</span><b>' + esc(t[0]) + '</b><span class="small muted">Relacionada con: ' + esc(t[1]) + '</span>' + (t[2] ? '<div style="margin-top:6px"><button class="btn" data-go="plazos/' + t[2] + '">Abrir asunto</button></div>' : '') + '</div>'; }).join('') + '</div></div>';
+  }
+  return '<div class="box"><h2>Cámara de Diputados · Leyes Federales Vigentes</h2>' + why('Revisar y no encontrar nada también es un resultado, y queda registrado.') + '<p>El agente revisó los textos actualizados de las leyes que sigue el equipo. No hay cambios que toquen contratos, criterios o asuntos de Profuturo.</p><button class="btn" data-go="traza">Ver traza</button></div>';
+}
+
+/* Mapa de impacto */
+var MAP = {
+  nodes:[
+    {id:'ref', x:340, y:230, r:46, t:['Reforma','CONSAR'], k:'center'},
+    {id:'a12', x:200, y:128, r:26, t:['Art. 12'], k:'art'},
+    {id:'a31', x:480, y:128, r:26, t:['Art. 31'], k:'art'},
+    {id:'a47', x:340, y:368, r:26, t:['Art. 47'], k:'art'},
+    {id:'crit', x:24, y:30, w:150, t:['Criterio:','reporte mensual'], k:'item'},
+    {id:'ofi', x:24, y:186, w:150, t:['Asunto: oficio','CONSAR 210/2026'], k:'item'},
+    {id:'cdat', x:506, y:30, w:150, t:['Contrato:','Centro de datos'], k:'item'},
+    {id:'ccon', x:506, y:186, w:150, t:['Contrato:','Centro de contacto'], k:'item'},
+    {id:'none', x:410, y:402, w:170, t:['Artículo 47:','sin elementos afectados'], k:'none'},
+    {id:'p1', x:262, y:30, w:150, t:['Avisado:','Cumplimiento'], k:'who'},
+    {id:'p2', x:184, y:300, w:116, t:['Avisado:','Jur. Corporativo'], k:'who'},
+    {id:'p3', x:506, y:300, w:150, t:['Avisado:','Compras'], k:'who'}
+  ],
+  edges:[['ref','a12'],['ref','a31'],['ref','a47'],['a12','crit'],['a12','ofi'],['a31','cdat'],['a31','ccon'],['a47','none'],['crit','p1'],['ofi','p2'],['ccon','p3']]
+};
+var NODEINFO = {
+  ref:['Reforma a disposiciones de CONSAR','Publicada hoy en el DOF (ejemplo ficticio). Cambian los artículos 12, 31 y 47.','vigilancia/ref'],
+  a12:['Artículo 12','El reporte mensual pasa de 10 a 5 días hábiles. Toca un criterio interno y un oficio abierto.','vigilancia/ref'],
+  a31:['Artículo 31','Nuevo: los proveedores críticos avisan de incidentes en 24 horas. Toca dos contratos.','vigilancia/ref'],
+  a47:['Artículo 47','La conservación de expedientes pasa de 5 a 10 años. El agente no encontró nada afectado.','vigilancia/ref'],
+  crit:['Criterio interno: reporte regulatorio mensual','El criterio de Cumplimiento fija 10 días para el reporte. Hay que actualizarlo a 5.',null],
+  ofi:['Oficio CONSAR 210/2026','Requerimiento abierto que pide el reporte mensual. El borrador de respuesta ya sigue la regla nueva.','escritos/csr'],
+  cdat:['Contrato: Centro de datos','Su cláusula undécima da 72 horas para avisar de incidentes. La reforma pide 24.','contratos/datos'],
+  ccon:['Contrato: Centro de contacto','Borrador en Compras con la misma cláusula de incidentes. Compras ya está avisada.','contratos/contacto'],
+  none:['Sin elementos afectados','El agente revisó contratos, criterios y asuntos y el artículo 47 no toca ninguno. También queda en la traza.',null],
+  p1:['Cumplimiento','Avisado a las 07:01 por el agente Impacto normativo.',null],
+  p2:['Jurídico Corporativo','Avisado a las 07:01. Responsable del oficio abierto.',null],
+  p3:['Compras','Avisado de que el contrato del centro de contacto necesita la cláusula nueva.',null]
+};
+V.impacto = function(){
+  var on = S.mapSel;
+  var pos = {}; MAP.nodes.forEach(function(n){ pos[n.id] = (n.k === 'center' || n.k === 'art') ? [n.x, n.y] : [n.x + n.w/2, n.y + 22]; });
+  var edges = MAP.edges.map(function(e){ var a = pos[e[0]], b = pos[e[1]]; var o = on && (e[0] === on || e[1] === on); return '<line class="edge' + (o ? ' on' : '') + '" x1="' + a[0] + '" y1="' + a[1] + '" x2="' + b[0] + '" y2="' + b[1] + '"' + (e[1] === 'none' ? ' stroke-dasharray="4 4"' : '') + '/>'; }).join('');
+  var nodes = MAP.nodes.map(function(n){
+    var cls = 'node' + (on === n.id ? ' on' : ''), lab = NODEINFO[n.id][0];
+    var g = '<g class="' + cls + '" tabindex="0" role="button" aria-label="' + esc(lab) + '" data-node="' + n.id + '">';
+    if (n.k === 'center') g += '<circle cx="' + n.x + '" cy="' + n.y + '" r="' + n.r + '" fill="#E6007E" stroke="#A3005A" stroke-width="2"/><text x="' + n.x + '" y="' + (n.y-3) + '" text-anchor="middle" style="fill:#fff;font-weight:700">' + n.t[0] + '</text><text x="' + n.x + '" y="' + (n.y+13) + '" text-anchor="middle" style="fill:#fff">' + n.t[1] + '</text>';
+    else if (n.k === 'art') g += '<circle cx="' + n.x + '" cy="' + n.y + '" r="' + n.r + '" fill="#FBE2EF" stroke="#E6007E" stroke-width="1.5"/><text x="' + n.x + '" y="' + (n.y+4) + '" text-anchor="middle" style="font-weight:700;fill:#24161D">' + n.t[0] + '</text>';
+    else {
+      var st = n.k === 'who' ? '#2E5AAC' : (n.k === 'none' ? '#B9A5B0' : '#A3005A');
+      g += '<rect class="' + (n.k === 'who' ? 'box-who' : 'box-item') + '" x="' + n.x + '" y="' + n.y + '" width="' + n.w + '" height="44" rx="10" stroke="' + st + '" stroke-width="1.5"' + (n.k === 'none' ? ' stroke-dasharray="4 4"' : '') + '/>' +
+        '<text x="' + (n.x + 10) + '" y="' + (n.y + 18) + '">' + n.t[0] + '</text><text x="' + (n.x + 10) + '" y="' + (n.y + 34) + '" style="font-weight:700">' + n.t[1] + '</text>';
+    }
+    return g + '</g>';
+  }).join('');
+  var info = on ? NODEINFO[on] : null;
+  var side = info ? '<h2>' + esc(info[0]) + '</h2>' + why('El detalle del nodo que eliges, con enlace a su pantalla.') + '<p>' + esc(info[1]) + '</p>' + (info[2] ? '<button class="btn pri" data-go="' + info[2] + '">Abrir</button>' : '<p class="small muted">Sin pantalla propia en esta demo.</p>') :
+    '<h2>Lo que toca la reforma de hoy</h2>' + why('El resumen del impacto. Haz clic en un nodo para ver su detalle.') + '<p><b>2 contratos de Compras, 1 criterio interno y 1 oficio de CONSAR abierto.</b> Tres áreas avisadas. El artículo 47 no toca nada y también se dice.</p><p><b>Riesgo que señala.</b> El contrato del centro de datos da 72 horas para avisar de incidentes y la reforma pide 24.</p><p class="muted small">Con el teclado: tabulador y Enter.</p>';
+  return '<div class="head"><div><h1>Mapa de impacto</h1><p>De la norma a los artículos, de los artículos a lo que tocan y de ahí a quién se avisó.</p></div><button class="btn" data-go="vigilancia/ref">Volver a la reforma</button></div>' +
+    purpose('Saber en minutos a qué contratos, criterios y asuntos afecta un cambio, y a quién se avisó, sin repasar carpetas.', 'Hacer clic en cualquier nodo y abrir el contrato o el asunto afectado.', 'ENGRAM, la memoria compartida de los agentes que enlaza normas, contratos, criterios y asuntos.') +
+    '<div class="mapwrap"><svg class="map" id="map" viewBox="0 0 680 460" role="group" aria-label="Mapa de impacto de la reforma">' + edges + nodes + '</svg><div class="box" id="map-side" aria-live="polite">' + side + '</div></div>' + foot();
+};
+
+/* Plazos */
+var INH = {};
+for (var dd = 14; dd <= 31; dd++){ INH['2026-12-' + dd] = dd === 14 ? 'Inhábil en el TFJA (Acuerdo SS/2/2026)' : 'Inhábil en el TFJA: segundo periodo vacacional (Acuerdo SS/2/2026)'; }
+INH['2027-01-01'] = 'Inhábil en el TFJA (Acuerdo SS/2/2026)';
+function iso(d){ return d.getFullYear() + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+function habil(d){ return d.getDay() !== 0 && d.getDay() !== 6 && !INH[iso(d)]; }
+function computo(nef){
+  var d = new Date(2026, 11, 3), k = 0, info = {};
+  info[iso(d)] = 'pub';
+  while (k < nef){ d.setDate(d.getDate()+1); if (habil(d)) k++; }
+  var surte = new Date(d); info[iso(d)] = 'pub';
+  var dias = []; k = 0;
+  while (k < 10){ d.setDate(d.getDate()+1); if (habil(d)){ k++; dias.push(iso(d)); info[iso(d)] = k === 10 ? 'end' : 'cnt'; } }
+  return {surte:surte, vence:new Date(d), dias:dias, info:info};
+}
+var DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'], MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function largo(d){ return DIAS[d.getDay()] + ' ' + d.getDate() + ' de ' + MESES[d.getMonth()] + (d.getFullYear() !== 2026 ? ' de ' + d.getFullYear() : ''); }
+function cal(y, m, c, last){
+  var first = new Date(y, m, 1), lead = (first.getDay() + 6) % 7, n = new Date(y, m+1, 0).getDate();
+  var h = '<div class="cal" role="group" aria-label="' + MESES[m] + ' de ' + y + '">' + ['L','M','X','J','V','S','D'].map(function(x){ return '<span class="wd">' + x + '</span>'; }).join('');
+  for (var i = 0; i < lead; i++) h += '<span class="em"></span>';
+  for (var d = 1; d <= Math.min(n, last || n); d++){
+    var dt = new Date(y, m, d), k = iso(dt), cls = '';
+    if (!habil(dt)) cls = 'inh';
+    if (c.info[k]) cls = c.info[k];
+    h += '<button class="' + cls + '" data-day="' + k + '" aria-label="' + largo(dt) + '">' + d + '</button>';
+  }
+  return h + '</div>';
+}
+function dayText(k){
+  var c = computo(S.regla === 'vigente' ? 3 : 2), p = k.split('-'), dt = new Date(+p[0], +p[1]-1, +p[2]), t = largo(dt) + ': ';
+  if (k === '2026-12-03') return t + 'se publica el acuerdo en el Boletín Jurisdiccional.';
+  if (iso(c.surte) === k) return t + 'surte efectos la notificación (' + (S.regla === 'vigente' ? 'tercer día hábil, texto de 2016' : 'segundo día hábil, texto publicado que aún no rige') + ').';
+  var i = c.dias.indexOf(k); if (i >= 0) return t + 'día ' + (i+1) + ' de 10 del plazo' + (i === 9 ? '. Vence.' : '.');
+  if (INH[k]) return t + INH[k] + '.';
+  if (dt.getDay() === 0 || dt.getDay() === 6) return t + 'sábado o domingo, inhábil.';
+  return t + 'día hábil que no cuenta en este plazo.';
+}
+V.plazos = function(){
+  var rows = Object.keys(PLAZOS).map(function(id){ var p = PLAZOS[id], est = S.confirmed[id] ? ['Confirmado','t-ok'] : p.est;
+    return '<tr tabindex="0" data-act="pla:' + id + '" class="' + (S.plaSel === id ? 'sel' : '') + '"><td><b>' + esc(p.asunto) + '</b></td><td>' + esc(p.org) + '</td><td>' + esc(p.que) + '</td><td>' + esc(p.vence) + '</td><td>' + esc(p.quien) + '</td><td><span class="tag ' + est[1] + '">' + esc(est[0]) + '</span></td></tr>'; }).join('');
+  return '<div class="head"><div><h1>Plazos y audiencias</h1><p>Cada notificación se convierte en un plazo con responsable y suplente. Si nadie confirma, sube a la gerencia.</p></div></div>' +
+    purpose('Que ningún plazo dependa de leer un boletín a tiempo. Cada plazo se calcula con la regla que rige en la fecha del acto y con el calendario de inhábiles de su tribunal.', 'Abrir un asunto, cambiar de regla en el juicio de nulidad, hacer clic en los días del calendario y confirmar.', 'el módulo de plazos de ThirdWish (comunicaciones oficiales, calendario y expedientes) con las reglas de cómputo mexicanas.') +
+    '<div class="box"><h2>Agenda</h2>' + why('Todos los plazos y audiencias abiertos. Elige uno para ver su detalle.') + '<div class="tblw"><table><thead><tr><th>Asunto</th><th>Órgano</th><th>Qué hay que hacer</th><th>Vence</th><th>Responsable y suplente</th><th>Estado</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>' +
+    '<div id="pla-detail" style="margin-top:16px">' + plaDetail() + '</div>' + foot();
+};
+function plaDetail(){
+  var id = S.plaSel, p = PLAZOS[id];
+  if (id === 'nul'){
+    var c = computo(S.regla === 'vigente' ? 3 : 2);
+    var warn = S.regla === 'vigente' ? '<p class="small" style="margin:8px 0 0"><span class="tag t-ok">Regla que rige</span> Notificación del 3/12/2026, antes del 4/02/2027: aplica el texto de 2016.</p>' :
+      '<p class="small" style="margin:8px 0 0"><span class="tag t-risk">Texto que aún no rige</span> Con el texto publicado el plazo vencería un día antes. Aquí sería un susto, no un error grave. Desde febrero de 2027 el error sería el contrario: contar con la regla vieja haría llegar el escrito un día tarde.</p>';
+    return '<div class="grid2"><div class="box" id="vigencia"><h2>Qué regla aplica</h2>' + why('Qué versión de la ley aplica a este acto. Si una reforma está publicada pero aún no rige, se ve aquí.') +
+      '<div class="vig"><span class="mk" style="left:6%">13/06/2016<span class="d"><br>«tercer día»</span></span><span class="mk me" style="left:66%">3/12/2026<span class="d"><br>este acuerdo</span></span><span class="mk" style="left:88%">4/02/2027<span class="d"><br>«segundo día»</span></span>' +
+      '<div class="bar"><span class="old"></span><span class="gap"></span><span class="new"></span></div><div class="lbls"><span>Rige el tercer día hábil</span><span>Reforma del 9/06/2026, aún sin vigor</span></div></div>' +
+      '<div class="tabs" role="group" aria-label="Regla"><button class="tab" data-act="regla:vigente" aria-pressed="' + (S.regla === 'vigente') + '">La que rige (tercer día)</button><button class="tab" data-act="regla:publicada" aria-pressed="' + (S.regla === 'publicada') + '">Solo el texto publicado (segundo día)</button></div>' + warn +
+      '<ol class="steps"><li>Publicado en el Boletín Jurisdiccional el <b>jueves 3 de diciembre</b>.</li><li>Surte efectos el <b>' + largo(c.surte) + '</b>.</li><li>Corre desde el día siguiente y solo cuentan días hábiles.</li><li>Salta el 14 de diciembre, las vacaciones del 15 al 31 y el 1 de enero.</li><li><b>Vence el ' + largo(c.vence) + '.</b></li></ol>' +
+      '<div class="row" style="margin-top:10px"><button class="cite" data-cite="lfpca65v">Art. 65 (2016)</button><button class="cite" data-cite="lfpca65n">Art. 65 (2026)</button><button class="cite" data-cite="trans3">Transitorio tercero</button><button class="cite" data-cite="lfpca74">Art. 74</button><button class="cite" data-cite="ss2">Calendario TFJA 2026</button></div></div>' +
+      '<div class="box"><h2>Calendario del cómputo</h2>' + why('El cómputo día a día con los inhábiles de este tribunal. Cada día explica por qué cuenta o no.') + '<span class="small muted">Diciembre de 2026</span>' + cal(2026, 11, c) + '<span class="small muted" style="display:block;margin-top:10px">Enero de 2027</span>' + cal(2027, 0, c, 15) +
+      '<div class="daynote" id="daynote" aria-live="polite">' + esc(S.dayNote || 'Haz clic en un día para ver por qué cuenta o no.') + '</div>' +
+      '<div class="row" style="margin-top:8px"><span class="tag t-info">Publicación y efectos</span><span class="tag t-ok">Cuenta</span><span class="tag t-risk">Inhábil</span><span class="tag t-brand">Vence</span></div>' +
+      '<p class="small muted" style="margin:10px 0 0">El calendario 2027 del TFJA aún no se publica. La plataforma recalcula el plazo cuando salga.</p>' +
+      '<div class="row" style="margin-top:10px"><button class="btn pri" data-act="confirm:nul"' + (S.confirmed.nul ? ' disabled' : '') + '>' + (S.confirmed.nul ? 'Plazo confirmado' : 'Confirmar plazo') + '</button><span class="small muted">' + esc(p.quien) + '. El abogado valida el cómputo.</span></div></div></div>';
+  }
+  var chain = id === 'amp' ? '<div class="chain" style="margin:10px 0"><span class="' + (S.confirmed.amp ? 'done' : 'on') + '">Responsable: Abogado C · ' + (S.confirmed.amp ? 'atendido' : 'sin confirmar 2 h') + '</span><span>→</span><span>Suplente: Abogada A</span><span>→</span><span class="' + (S.confirmed.amp ? '' : 'on') + '">Gerencia · escalado 07:03</span></div>' : '';
+  var extra = id === 'csr' ? '<p>El requerimiento pide el reporte mensual. <b>El artículo 12 reformado hoy</b> lo pasa de 10 a 5 días hábiles. <button class="btn" data-go="impacto">Ver en el mapa</button> <button class="btn" data-go="escritos/csr">Ver borrador de respuesta</button></p>' :
+    id === 'amp' ? '<p>El borrador del desahogo está listo. Falta confirmar que el poder sigue vigente. <button class="btn" data-go="escritos/amp">Ver borrador</button></p>' :
+    id === 'lab' ? '<p>Hay 2 tesis nuevas esta semana sobre esta materia. <button class="btn" data-go="vigilancia/scjn">Ver tesis</button></p>' :
+    id === 'cdf' ? '<p>La UNE de Profuturo ya tiene el expediente. <button class="cite" data-cite="lpdusf60">LPDUSF, art. 60</button><button class="cite" data-cite="lpdusf50">Art. 50 Bis</button></p>' : '';
+  return '<div class="box"><h2>' + esc(p.asunto) + ' · ' + esc(p.org) + '</h2>' + why(id === 'amp' ? 'La cadena de aviso: si el responsable no confirma, avisa al suplente y después a la gerencia.' : 'El detalle del asunto, con lo que le afecta hoy.') + '<p>' + esc(p.que) + '. Vence: <b>' + esc(p.vence) + '</b>. ' + esc(p.quien) + '.</p>' + chain + extra +
+    '<p class="small muted">La regla de cómputo y el calendario de inhábiles de cada órgano los carga y valida Jurídico. Datos del asunto ficticios.</p>' +
+    '<button class="btn pri" data-act="confirm:' + id + '"' + (S.confirmed[id] ? ' disabled' : '') + '>' + (S.confirmed[id] ? 'Confirmado' : (id === 'amp' ? 'Lo atiendo yo' : 'Confirmar')) + '</button></div>';
+}
+
+/* Contratos */
+function openAlerts(id){ return CONTRACTS[id].alerts.filter(function(a){ return !S.fixed[id + ':' + a]; }).length; }
+function stepOf(id){ var c = S.cols[id]; return c === 'firma' ? 3 : c === 'juridico' ? 2 : (CONTRACTS[id].docs || []).every(function(d){ return d.ok; }) ? 1 : 0; }
+function prog(id){ var s = stepOf(id); return '<div class="prog">' + ['Solicitud','Revisión automática','Jurídico','Firma'].map(function(x, i){ return '<span class="' + (i < s ? 'done' : i === s ? 'now' : '') + '">' + x + '</span>'; }).join('') + '</div>'; }
+V.contratos = function(){
+  if (S.role === 'compras') return contratosCompras();
+  var cols = [['compras','Área solicitante'],['juridico','Jurídico'],['firma','Firma']];
+  var areas = ['todas'].concat(Object.keys(CONTRACTS).map(function(id){ return CONTRACTS[id].area; }).filter(function(a, i, arr){ return arr.indexOf(a) === i; }));
+  var filt = '<div class="tabs" role="group" aria-label="Área">' + areas.map(function(a){ return '<button class="tab" data-act="areaf:' + a + '" aria-pressed="' + (S.areaF === a) + '">' + (a === 'todas' ? 'Todas las áreas' : a) + '</button>'; }).join('') + '</div>';
+  var k = '<div class="kanban">' + cols.map(function(c){
+    var ids = Object.keys(CONTRACTS).filter(function(id){ return S.cols[id] === c[0] && (S.areaF === 'todas' || CONTRACTS[id].area === S.areaF); });
+    return '<div class="colk"><h3>' + c[1] + ' · ' + ids.length + '</h3>' + ids.map(function(id){ var x = CONTRACTS[id], open = openAlerts(id);
+      return '<button class="kcard" data-act="con:' + id + '" aria-pressed="' + (S.conSel === id) + '"><b>' + esc(x.t) + '</b><span class="small muted">' + esc(x.area) + ' · ' + esc(x.p) + '</span><br>' + (open ? '<span class="tag ' + (open >= 3 ? 't-risk' : 't-warn') + '">' + open + (open === 1 ? ' alerta' : ' alertas') + '</span>' : '<span class="tag t-ok">Sin alertas</span>') + (x.alerts.indexOf('inc') >= 0 && !S.fixed[id + ':inc'] ? '<span class="tag t-brand">Reforma de hoy</span>' : '') + (x.nuevo ? '<span class="tag t-info">Nuevo de Compras</span>' : '') + '</button>'; }).join('') + '</div>';
+  }).join('') + '</div>';
+  return '<div class="head"><div><h1>Contratos de todas las áreas</h1><p>Área solicitante, Jurídico y firma, con la primera revisión hecha por la plataforma.</p></div></div>' +
+    purpose('Sacar adelante los contratos que llegan de todas las áreas sin que esperen semanas. Solo Compras manda unos 300 al año. La plataforma hace la primera revisión frente al contrato tipo, las políticas internas y la ley; el abogado decide.', 'Filtrar por área, abrir un contrato, hacer clic en una cláusula marcada, proponer el texto del contrato tipo y devolverlo o enviarlo a firma.', 'la asistencia legal que construimos para Loomis: análisis de cláusulas, riesgos, plantillas y flujo entre áreas.') +
+    why('Dónde está cada contrato y de qué área viene. Los que crea Compras en «Nueva solicitud» aparecen aquí.') + filt + k + '<div id="con-detail">' + conDetail() + '</div>' + foot();
+};
+function contratosCompras(){
+  var ids = mine();
+  var list = '<div class="list">' + ids.map(function(id){ var x = CONTRACTS[id], falta = (x.docs || []).filter(function(d){ return !d.ok; }).length;
+    return '<button class="li" data-act="con:' + id + '" aria-pressed="' + (S.conSel === id) + '"><b>' + esc(x.t) + '</b><span class="small muted">' + esc(x.p) + ' · ' + ['Borrador en Compras','Revisión automática hecha','En Jurídico','Listo para firma'][stepOf(id)] + '</span><br>' + (falta ? '<span class="tag t-warn">Te falta ' + falta + (falta === 1 ? ' documento' : ' documentos') + '</span>' : '<span class="tag t-ok">Documentos completos</span>') + (x.nuevo ? '<span class="tag t-info">Nuevo</span>' : '') + '</button>'; }).join('') + '</div>';
+  var x = CONTRACTS[S.conSel];
+  var docs = '<ul class="docs">' + (x.docs || []).map(function(d, i){ return '<li><span class="st' + (d.ok ? ' ok' : '') + '" aria-hidden="true">' + (d.ok ? '✓' : '!') + '</span><span class="tx"><b>' + esc(d.n) + '</b>' + (d.w ? '<small>' + esc(d.w) + (d.cite ? ' <button class="cite" data-cite="' + d.cite + '">Por qué</button>' : '') + '</small>' : '') + '</span>' + (d.ok ? '<span class="tag t-ok">Entregado</span>' : '<button class="btn pri" data-act="upload:' + S.conSel + ':' + i + '">Subir</button>') + '</li>'; }).join('') + '</ul>';
+  var act = S.cols[S.conSel] === 'compras' ? '<div class="row" style="margin-top:12px"><button class="btn pri" data-act="resend:' + S.conSel + '"' + ((x.docs || []).some(function(d){ return !d.ok; }) ? ' disabled title="Sube primero los documentos que faltan"' : '') + '>Enviar a Jurídico</button></div>' : '';
+  return '<div class="head"><div><h1>Tus contratos</h1><p>En qué punto está cada uno, qué te pide Jurídico y qué documentos faltan.</p></div><button class="btn pri" data-go="nueva">Nueva solicitud</button></div>' +
+    purpose('Que Compras vea el avance de cada contrato y entregue lo que falta sin correos de ida y vuelta.', 'Elegir un contrato, subir documentos y reenviarlo a Jurídico. El detalle jurídico de la revisión lo ve Jurídico.', 'el flujo de contratos que construimos para Loomis y la traza de WEAVER.') +
+    '<div class="grid2"><div class="box"><h2>Tus solicitudes</h2>' + why('Todas tus solicitudes con su estado. Elige una.') + list + '</div>' +
+    '<div class="box" id="compras-detail"><h2>' + esc(x.t) + '</h2>' + why('El avance del contrato, lo que te dice Jurídico y los documentos que faltan.') + prog(S.conSel) +
+    '<div class="purpose" style="display:block;border-left-color:var(--info);margin:10px 0"><b style="color:var(--info)">Jurídico te dice.</b> ' + esc(x.nota || x.resumen || '') + '</div>' + docs + act + '</div></div>' + foot();
+}
+function conDetail(){
+  var id = S.conSel, x = CONTRACTS[id];
+  if (!x.clauses){
+    return '<div class="box"><h2>' + esc(x.t) + '</h2>' + why('Resumen del contrato y sus alertas. Este no tiene el texto completo en la demo.') + prog(id) + '<p>' + esc(x.p) + '. ' + esc(x.resumen || '') + '</p>' +
+      (x.alerts.length ? '<div>' + x.alerts.map(function(a){ return '<div class="alert ' + ALERTS[a].lvl + '" style="cursor:default"><b>' + esc(ALERTS[a].t) + '</b><button class="cite" data-cite="' + ALERTS[a].cite + '">Ver cita</button></div>'; }).join('') + '</div>' : '') + '</div>';
+  }
+  var paper = why('El contrato con las cláusulas marcadas. Haz clic en una para ver su alerta.') + '<div class="paper" id="doc"><h3>CONTRATO DE PRESTACIÓN DE SERVICIOS · ' + esc(x.t.toUpperCase()) + ' · ÁREA: ' + esc(x.area.toUpperCase()) + ' · FICTICIO</h3>' + x.clauses.map(function(c, i){
+    var a = c.a, fixed = a && S.fixed[id + ':' + a], cls = 'clause' + (a ? ' flag' + (ALERTS[a].lvl === 'risk' ? ' risk' : '') + (fixed ? ' fixed' : '') : '') + (S.clauseSel === i ? ' sel' : '');
+    var fx = !a ? '' : id === 'pub' ? ALERTS[a].fix.replace(/El Proveedor/g, 'La Agencia').replace(/el Proveedor/g, 'la Agencia') : ALERTS[a].fix;
+    var body = fixed === true ? '<del>' + esc(c.x) + '</del> <ins>' + esc(fx) + '</ins>' : esc(c.x);
+    return a ? '<button class="' + cls + '" data-act="clause:' + i + '"><b>' + c.n + '. ' + c.h + '.</b> ' + body + '</button>' : '<p class="' + cls + '"><b>' + c.n + '. ' + c.h + '.</b> ' + body + '</p>';
+  }).join('') + '</div>';
+  var alerts = x.alerts.map(function(a){ var al = ALERTS[a], fixed = S.fixed[id + ':' + a], ci = -1;
+    x.clauses.forEach(function(c, j){ if (c.a === a) ci = j; });
+    return '<div class="alert ' + al.lvl + (fixed ? ' fixed' : '') + (S.clauseSel === ci ? ' sel' : '') + '" data-act="clause:' + ci + '"><b>' + (al.nueva ? '<span class="tag t-brand">Nueva por la reforma de hoy</span> ' : '') + esc(al.t) + '</b><p>' + esc(al.d) + '</p>' +
+      '<div class="row"><button class="cite" data-cite="' + al.cite + '">Ver cita</button>' + (fixed === 'doc' ? '<span class="tag t-ok">Compras entregó el documento</span>' : fixed ? '<span class="tag t-ok">Texto propuesto</span><button class="btn ghost" data-act="unfix:' + a + '">Deshacer</button>' : '<button class="btn" data-act="fix:' + a + '">Proponer el texto</button>') + '</div></div>'; }).join('');
+  var open = openAlerts(id);
+  return '<div class="grid2"><div>' + paper + '</div><div><div class="box"><h2>Riesgos detectados · ' + (open ? open + (open === 1 ? ' abierto' : ' abiertos') : 'ninguno abierto') + '</h2>' + why('Cada riesgo trae su cita y un texto propuesto del contrato tipo. Lo que se negocia lo decide el abogado.') + alerts +
+    '<div class="row" style="margin-top:12px"><button class="btn" data-act="move:compras">Devolver a ' + esc(x.area) + ' con comentarios</button><button class="btn pri" data-act="move:firma">Enviar a firma</button></div></div></div></div>';
+}
+
+/* Nueva solicitud (Compras) */
+V.nueva = function(){
+  var w = S.wiz, steps = ['1 · Tipo de contrato','2 · Proveedor','3 · Documentos'];
+  var hdr = '<div class="wsteps">' + steps.map(function(s, i){ return '<span class="' + (w.done ? 'done' : (i + 1 === w.step ? 'on' : (i + 1 < w.step ? 'done' : ''))) + '">' + s + '</span>'; }).join('') + '</div>';
+  var body = '';
+  if (w.done){
+    var r = w.done;
+    body = '<div class="result ' + (r.firma ? 'ok' : 'go') + '"><h2 style="margin-bottom:6px">' + (r.firma ? 'Va directo a firma' : 'Enviado a Jurídico con la primera revisión hecha') + '</h2><p style="margin:0">' + esc(r.msg) + '</p></div>' +
+      '<div class="row" style="margin-top:12px"><button class="btn pri" data-go="contratos/' + r.id + '">Ver el contrato</button><button class="btn" data-act="wizreset">Hacer otra solicitud</button><button class="btn" data-act="seeas">Verlo como Jurídico</button></div>';
+  } else if (w.step === 1){
+    body = why('Empieza siempre por el contrato tipo. Así Jurídico solo revisa lo que cambia.') + '<div class="opts">' + Object.keys(TIPOS).map(function(k){ return '<button class="opt" data-act="wtipo:' + k + '" aria-pressed="' + (w.tipo === k) + '"><b>' + TIPOS[k].t + '</b><span class="small muted">' + TIPOS[k].d + '</span></button>'; }).join('') + '</div>' +
+      '<div class="row" style="margin-top:12px"><button class="btn pri" data-act="wnext"' + (w.tipo ? '' : ' disabled') + '>Siguiente</button></div>';
+  } else if (w.step === 2){
+    body = why('Lo que necesita la plataforma para la primera revisión.') + '<div class="fld"><label for="w-prov">Proveedor</label><input type="text" id="w-prov" value="' + esc(w.prov) + '" placeholder="Nombre del proveedor (ficticio)"></div>' +
+      '<div class="fld"><span class="lb">Importe anual</span><div class="chips">' + ['Menos de $500 mil','De $500 mil a $5 millones','Más de $5 millones'].map(function(m){ return '<button class="chip" data-act="wmonto:' + m + '" aria-pressed="' + (w.monto === m) + '">' + m + '</button>'; }).join('') + '</div></div>' +
+      '<div class="fld"><span class="lb">¿Cambias algo del contrato tipo?</span><div class="chips"><button class="chip" data-act="wcambios:no" aria-pressed="' + (w.cambios === 'no') + '">No, va tal cual</button><button class="chip" data-act="wcambios:si" aria-pressed="' + (w.cambios === 'si') + '">Sí, pide cambios</button></div></div>' +
+      '<div class="row"><button class="btn" data-act="wback">Atrás</button><button class="btn pri" data-act="wnext"' + (w.monto && w.cambios ? '' : ' disabled') + '>Siguiente</button></div>';
+  } else {
+    var req = TIPOS[w.tipo].docs;
+    body = why('Lo que pide la política de Compras para este tipo de contrato. Si falta algo, la revisión lo marca.') + '<ul class="docs">' + req.map(function(d, i){ var ok = !!w.docs[i]; return '<li><span class="st' + (ok ? ' ok' : '') + '" aria-hidden="true">' + (ok ? '✓' : '!') + '</span><span class="tx"><b>' + esc(d) + '</b></span>' + (ok ? '<span class="tag t-ok">Subido</span>' : '<button class="btn" data-act="wdoc:' + i + '">Subir</button>') + '</li>'; }).join('') + '</ul>' +
+      '<div class="row" style="margin-top:12px"><button class="btn" data-act="wback">Atrás</button><button class="btn pri" data-act="wsend">Enviar solicitud</button><span class="small muted">Puedes enviarla aunque falte algo: la revisión automática te lo pedirá.</span></div>';
+  }
+  return '<div class="head"><div><h1>Nueva solicitud de contrato</h1><p>Tres pasos. La primera revisión se hace al enviar.</p></div></div>' +
+    purpose('Que cada contrato llegue a Jurídico completo y sobre el contrato tipo, o que no tenga que llegar. Con el contrato tipo de confidencialidad sin cambios, va directo a firma según la política (ficticia).', 'Elegir el tipo, decir si hay cambios y subir los documentos. Al enviar ves el resultado de la revisión automática.', 'las plantillas y la generación de contratos de la asistencia legal que hicimos para Loomis.') +
+    '<div class="box" id="wizard">' + hdr + body + '</div>' + foot();
+};
+
+/* Escritos */
+V.escritos = function(){
+  var list = '<div class="list" id="esc-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">' + Object.keys(ESCRITOS).map(function(id){ var e = ESCRITOS[id], o = escOpen(id);
+    return '<button class="li" data-act="esc:' + id + '" aria-pressed="' + (S.escSel === id) + '"><span class="small muted">' + esc(e.via) + ' · ' + esc(e.org) + ' · vence ' + esc(e.vence) + '</span><b>' + esc(e.t) + '</b>' +
+      (S.escFirma[id] ? '<span class="tag t-ok">En firma</span>' : o ? '<span class="tag t-warn">' + o + (o === 1 ? ' pendiente' : ' pendientes') + '</span>' : '<span class="tag t-ok">Sin pendientes</span>') + '</button>'; }).join('') + '</div>';
+  var e = ESCRITOS[S.escSel];
+  var src = '<p class="sect" style="margin-top:14px">De dónde sale este borrador</p>' + why('Lo que el agente usó. Cada fuente se abre.') + '<div class="row">' + e.fuentes.map(function(f){ return '<button class="cite" data-cite="' + f[1] + '">' + esc(f[0]) + '</button>'; }).join('') + '</div>' +
+    '<p class="small muted" style="margin-top:10px">Lo preparó el agente «' + esc(e.ag) + '» a las 07:0' + (S.escSel === 'csr' ? '5' : '2') + '. ' + esc(e.quien) + '.</p>';
+  return '<div class="head"><div><h1>Escritos</h1><p>Borradores de escritos judiciales y administrativos, con lo que falta marcado.</p></div></div>' +
+    purpose('Quitar al abogado la parte mecánica de cada escrito: ordenar hechos, documentos y fuentes, y dejar marcado lo que falta en lugar de inventarlo. La estrategia, el texto final y la firma son del abogado.', 'Elegir un escrito, corregir el texto haciendo clic en él, resolver los pendientes y pasarlo a firma. Mientras quede un pendiente, no pasa.', 'la generación de documentos con plantillas de la asistencia legal que hicimos para Loomis, ENGRAM para los escritos y criterios anteriores del equipo y la traza de WEAVER.') +
+    '<div class="box"><h2>En preparación</h2>' + why('Uno administrativo y uno judicial. Elige uno.') + list + src + '</div><div id="esc-detail" style="margin-top:16px">' + escDetail() + '</div>' + foot();
+};
+function escDetail(){
+  var id = S.escSel, e = ESCRITOS[id], o = escOpen(id), firma = S.escFirma[id];
+  var paper = '<div class="paper" id="esc-paper"><h3>BORRADOR · ' + esc(e.via.toUpperCase()) + ' · ' + esc(e.t.toUpperCase()) + ' · FICTICIO</h3>' + e.secs.map(function(s, i){
+    var k = id + ':' + i, txt = S.escEd[k] != null ? S.escEd[k] : s.x, pend = s.p && !S.escOk[id + ':' + s.p];
+    return '<div class="esec"><b>' + esc(s.h) + '</b><span class="etx" contenteditable="' + (firma ? 'false' : 'true') + '" data-esec="' + k + '" spellcheck="false">' + esc(txt) + '</span>' + (pend ? '<mark class="pend">[PENDIENTE: ' + esc(e.pend[s.p].m) + ']</mark>' : '') + '</div>'; }).join('') +
+    (firma ? '<span class="firmado">Enviado a firma del abogado responsable</span>' : '') + '</div>';
+  var rev = Object.keys(e.pend).map(function(k){ var p = e.pend[k], ok = S.escOk[id + ':' + k];
+    return '<div class="alert ' + (ok ? 'fixed' : 'warn') + '" style="cursor:default"><b>' + esc(p.t) + '</b><p>' + esc(p.d) + '</p><div class="row">' + (ok ? '<span class="tag t-ok">' + esc(p.ok) + '</span>' : '<button class="btn" data-act="epend:' + k + '"' + (firma ? ' disabled' : '') + '>' + esc(p.b) + '</button>') + '</div></div>'; }).join('');
+  return '<div class="grid2"><div>' + why('El borrador. Haz clic en cualquier párrafo para corregirlo. Lo que falta va marcado en ámbar.') + paper + '</div><div class="box"><h2>Pendientes y riesgos · ' + (o ? o + (o === 1 ? ' abierto' : ' abiertos') : 'ninguno abierto') + '</h2>' + why('Lo que el agente no puede dar por bueno: si se presenta así, el escrito sale incompleto o mal fundado. Cada punto lo cierra una persona.') + rev +
+    '<div class="row" style="margin-top:12px"><button class="btn" data-act="esave"' + (firma ? ' disabled' : '') + '>Guardar versión</button><button class="btn pri" data-act="efirma"' + (o || firma ? ' disabled' : '') + (o ? ' title="Cierra primero los pendientes"' : '') + '>' + (firma ? 'En firma' : 'Pasar a firma') + '</button><button class="btn ghost" data-go="plazos/' + e.plazo + '">Ver plazo</button></div>' +
+    '<p class="small muted" style="margin:10px 0 0">Vence: <b>' + esc(e.vence) + '</b>. Es una maqueta, no un escrito listo para presentar.</p></div></div>';
+}
+
+/* Consulta */
+V.consulta = function(){
+  var compras = S.role === 'compras', Q = compras ? QA_C : QA, ch = compras ? S.chatC : S.chat;
+  var sugg = Q.map(function(x, i){ return '<button class="li" data-act="ask:' + i + '">' + esc(x.q) + '</button>'; }).join('');
+  var chat = ch.length ? ch.map(function(m){ var x = Q[m];
+    return '<div class="q">' + esc(x.q) + '</div><div class="a">' + esc(x.a) + '<div class="meta">' + (x.none ? '<span class="tag t-warn">Sin respaldo suficiente</span> ' : '<span class="tag t-ok">Con cita</span> ') + x.c.map(function(c){ return '<button class="cite" data-cite="' + c + '">' + esc(CITES[c].t) + '</button>'; }).join('') + '</div><div class="meta">' + (compras ? 'Si tienes dudas sobre un contrato concreto, Jurídico lo ve en su revisión.' : 'La valida un abogado antes de usarla fuera del equipo.') + '</div></div>'; }).join('') :
+    '<p class="muted">Elige una pregunta o escribe la tuya. Todas las citas abren el texto de la norma o de la política.</p>';
+  return '<div class="head"><div><h1>Consulta</h1><p>' + (compras ? 'Dudas de Compras sobre la política y los documentos, respondidas con su fuente.' : 'Pregunta a la norma vigente. Responde con la cita o dice que no tiene respaldo.') + '</p></div>' + (ch.length ? '<button class="btn" data-act="clearchat">Limpiar</button>' : '') + '</div>' +
+    purpose(compras ? 'Que Compras resuelva sola las dudas frecuentes (qué documentos pedir, cuándo hace falta Jurídico) y deje a Jurídico lo que de verdad necesita un abogado.' : 'Responder las dudas del equipo con la norma vigente y su cita, sin buscar en carpetas. Si no hay respaldo, lo dice en lugar de inventar.', compras ? 'Elegir una pregunta frecuente o escribir la tuya.' : 'Elegir una pregunta frecuente o escribir la tuya. Las cuatro primeras usan textos legales reales; la quinta enseña qué pasa cuando no hay respaldo.', 'el Agentic RAG de la asistencia legal de Loomis y la memoria ENGRAM.') +
+    '<div class="grid2"><div class="box"><h2>Preguntas frecuentes</h2>' + why(compras ? 'Las que más se repiten en Compras.' : 'Las que más se repiten en el equipo jurídico.') + '<div class="sugg">' + sugg + '</div></div><div class="box"><h2>Respuesta</h2>' + why('Cada respuesta con sus citas. Haz clic en una para leer el texto.') + '<div class="chat" id="chat" aria-live="polite">' + chat + '</div>' +
+    '<form class="ask" data-form="ask"><input type="text" id="askin" placeholder="Escribe una pregunta" aria-label="Escribe una pregunta"><button class="btn pri" type="submit">Preguntar</button></form></div></div>' + foot();
+};
+
+/* Agentes */
+V.agentes = function(){
+  var list = S.agents.map(function(a, i){ return '<div class="agent"><div><b>' + esc(a.n) + '</b><div class="small muted"><span class="tag t-brand">' + esc(a.mod) + '</span>' + esc(a.g) + ' · ' + esc(a.src.join(', ')) + '</div></div>' +
+    '<div class="row"><span class="tag ' + (a.m === 'Local' ? 't-ok' : 't-info') + '">' + a.m + '</span><button class="switch' + (a.on ? '' : ' off') + '" data-act="toggle:' + i + '" aria-pressed="' + a.on + '">' + (a.on ? 'Activo' : 'Pausado') + '</button></div>' +
+    '<div class="meter" role="img" aria-label="' + a.pct + '% del tope mensual"><span style="width:' + a.pct + '%"></span></div><div class="small muted" style="grid-column:1 / -1">' + a.pct + '% del tope mensual de gasto</div></div>'; }).join('');
+  var d = S.draft, sens = d.src.some(function(s){ return SENSIBLE.indexOf(s) >= 0; });
+  var b = '<div class="box" id="builder"><h2>Configura un agente</h2>' + why('Lo que decide el abogado: en qué módulo trabaja, qué fuentes mira, con qué instrucciones, a quién avisa y qué modelo usa.') +
+    '<div class="fld"><span class="lb">En qué módulo trabaja</span><div class="chips">' + ['Conocimiento jurídico','Contratos','Escritos','Plazos'].map(function(s){ return '<button class="chip" data-act="amod:' + s + '" aria-pressed="' + (d.mod === s) + '">' + s + '</button>'; }).join('') + '</div></div>' +
+    '<div class="fld"><label for="ag-n">Nombre</label><input type="text" id="ag-n" value="' + esc(d.n) + '" placeholder="Por ejemplo: Vigía de CONDUSEF"></div>' +
+    '<div class="fld"><span class="lb">Qué fuentes mira</span><div class="chips">' + SOURCES.map(function(s){ return '<button class="chip" data-act="src:' + s + '" aria-pressed="' + (d.src.indexOf(s) >= 0) + '">' + s + '</button>'; }).join('') + '</div></div>' +
+    '<div class="fld"><label for="ag-i">Instrucciones</label><textarea id="ag-i">Avisar de cada cambio que toque a Profuturo, compararlo con el texto vigente y decir a qué contratos, criterios y asuntos afecta.</textarea></div>' +
+    '<div class="fld"><span class="lb">A quién avisa</span><div class="chips">' + ['Jurídico Corporativo','Gerencia Contenciosa','Cumplimiento','Compras'].map(function(s){ return '<button class="chip" data-act="avisa:' + s + '" aria-pressed="' + (d.avisa.indexOf(s) >= 0) + '">' + s + '</button>'; }).join('') + '</div></div>' +
+    '<div class="fld"><span class="lb">Modelo de IA</span><div class="chips"><button class="chip" data-act="model:Nube" aria-pressed="' + (!sens && d.m === 'Nube') + '"' + (sens ? ' disabled' : '') + '>En la nube</button><button class="chip" data-act="model:Local" aria-pressed="' + (sens || d.m === 'Local') + '">Local, en Profuturo</button></div>' +
+    (sens ? '<div class="lock">Una de las fuentes trae datos personales o información interna. El modelo corre en la infraestructura de Profuturo y no se puede cambiar.</div>' : '') + '</div>' +
+    '<div class="fld"><label for="ag-t">Tope mensual de gasto: <span id="ag-tv">' + d.tope + '</span>% del presupuesto de IA del área</label><input type="range" id="ag-t" min="5" max="100" step="5" value="' + d.tope + '" style="width:100%"></div>' +
+    '<button class="btn pri" data-act="create">Activar agente</button></div>';
+  return '<div class="head"><div><h1>Configuración de agentes</h1><p>Una capacidad transversal. Los módulos organizan el trabajo y los agentes ejecutan tareas dentro de ellos.</p></div></div>' +
+    purpose('Que el propio equipo jurídico configure y ajuste los agentes que trabajan dentro de cada módulo, con las reglas que fija Profuturo: accesos, modelos autorizados, permisos y tope de gasto. Lo que haya que programar lo hace ThirdWish.', 'Pausar un agente, armar uno nuevo y ver cómo el modelo pasa a local si lee expedientes. Al activarlo aparece en la lista y en la traza.', 'WEAVER, nuestra plataforma de agentes orquestados y gobernados.') +
+    '<div class="grid2"><div class="box"><h2>Activos · ' + S.agents.length + '</h2>' + why('Cada agente con el módulo en el que trabaja, su modelo y su gasto frente al tope.') + list + '</div>' + b + '</div>' + foot();
+};
+
+/* Panel */
+V.panel = function(){
+  var t = function(c, v, l, s, r){ return '<button class="kpi" data-go="' + r + '"><span class="v"><span class="sem" style="background:' + c + '"></span>' + v + '</span><span class="l">' + l + '</span><span class="s">' + s + '</span></button>'; };
+  var semana = [9,6,8,5,7,4], max = 10;
+  return '<div class="head"><div><h1>Panel de la gerencia</h1><p>Semáforo por área para quien dirige el equipo.</p></div></div>' +
+    purpose('Que la gerencia vea en un vistazo dónde hay riesgo, cuánto tarda Jurídico y cuánto cuesta la IA por agente.', 'Hacer clic en cualquier indicador para ir a su detalle.', 'el panel de indicadores de ThirdWish y el control de gasto por agente de WEAVER.') +
+    why('Cifras ficticias. En el piloto se miden de verdad: horas por contrato, avisos a tiempo y plazos registrados sin captura manual.') +
+    '<div class="grid4">' + t('#B42318', S.confirmed.amp ? '0' : '1', 'Plazos en riesgo', S.confirmed.amp ? 'Todo confirmado' : 'Requerimiento de amparo escalado', 'plazos/amp') +
+    t('#9A5800', String(2 - (S.confirmed.nul ? 1 : 0) - (S.confirmed.amp ? 1 : 0)), 'Avisos sin confirmar', 'Responsable y suplente avisados', 'plazos') +
+    t('#1D7A4C', '2.4 días', 'Tiempo medio en Jurídico', 'Contratos de Compras este mes', 'contratos') +
+    t('#9A5800', '1', 'Reformas por revisar', 'CONSAR, publicada hoy', 'vigilancia/ref') + '</div>' +
+    '<div class="grid2" style="margin-top:16px"><div class="box"><h2>Contratos que llegan de Compras por semana</h2>' + why('El volumen que entra en Jurídico. Ayuda a repartir carga.') + '<div class="bars">' + semana.map(function(v, i){ return '<div style="height:' + (v/max*100) + '%"><span>S' + (i+1) + '</span></div>'; }).join('') + '</div><p class="small muted" style="margin-top:26px">Ficticio. Con 300 contratos al año salen unos 6 por semana.</p></div>' +
+    '<div class="box"><h2>Gasto de IA por agente frente a su tope</h2>' + why('Para que la factura de IA se gobierne como cualquier otro gasto.') + S.agents.slice(0, 6).map(function(a){ return '<div class="small" style="margin:8px 0 3px">' + esc(a.n) + ' · ' + a.pct + '%</div><div class="meter"><span style="width:' + a.pct + '%"></span></div>'; }).join('') + '</div></div>' + foot();
+};
+
+/* Traza */
+V.traza = function(){
+  var compras = S.role === 'compras';
+  var rows = S.log.filter(function(l){ if (compras && !l.c) return false; return S.logFilter === 'todo' || (S.logFilter === 'ag' ? l.ag : !l.ag); }).map(function(l){ return '<tr class="' + (l.you ? 'you' : '') + '"><td>' + l.h + '</td><td>' + esc(l.who) + '</td><td>' + esc(l.a) + '</td></tr>'; }).join('');
+  return '<div class="head"><div><h1>Traza</h1><p>Cada acción de cada agente y de cada persona, con hora y autor. Tus clics de esta demo también están aquí.</p></div></div>' +
+    purpose('Poder auditar quién hizo qué y cuándo, persona o agente.' + (compras ? ' Compras solo ve lo que toca a sus contratos.' : ''), 'Filtrar por agentes o por personas.', 'la trazabilidad completa de WEAVER y la auditoría por usuario de la asistencia legal de Loomis.') +
+    '<div class="tabs" role="group" aria-label="Filtro">' + [['todo','Todo'],['ag','Agentes'],['per','Personas']].map(function(f){ return '<button class="tab" data-act="logf:' + f[0] + '" aria-pressed="' + (S.logFilter === f[0]) + '">' + f[1] + '</button>'; }).join('') + '</div>' +
+    '<div class="box" id="traza">' + why('Lo más reciente arriba. Tus acciones van resaltadas.') + '<div class="tblw"><table class="log"><thead><tr><th>Hora</th><th>Quién</th><th>Qué hizo</th></tr></thead><tbody>' + (rows || '<tr><td colspan="3" class="muted">Todavía no hay nada. Prueba cualquier botón y vuelve.</td></tr>') + '</tbody></table></div></div>' + foot();
+};
+
+function foot(){ return '<p class="foot">Demo con datos ficticios: asuntos, expedientes, contratos, personas, políticas internas, horas y gasto. Las citas de ley marcadas como reales están comprobadas en los textos publicados por la Cámara de Diputados, el DOF, la SCJN y el TFJA a 27/10/2026. ThirdWish · Innovation Pitch Day 2026.</p>'; }
+
+/* ===================== Render ===================== */
+function render(){
+  if (PERM[S.role].indexOf(S.route) < 0) S.route = 'hoy';
+  if (S.role === 'compras' && (!CONTRACTS[S.conSel] || CONTRACTS[S.conSel].area !== 'Compras')) S.conSel = 'ti';
+  rail();
+  $('#view').innerHTML = V[S.route]();
+  if (tourOn) spot();
+}
+
+/* ===================== Cajón lateral ===================== */
+var lastFocus = null;
+function openDrawer(title, html){
+  lastFocus = document.activeElement;
+  $('#dr-title').textContent = title; $('#dr-body').innerHTML = html;
+  $('#drawer').classList.add('open'); $('#drawer').setAttribute('aria-hidden','false'); $('#scrim').classList.add('on');
+  $('#dr-close').focus();
+}
+function closeDrawer(){ $('#drawer').classList.remove('open'); $('#drawer').setAttribute('aria-hidden','true'); $('#scrim').classList.remove('on'); if (lastFocus && lastFocus.isConnected) lastFocus.focus(); }
+function showCite(k){
+  var c = CITES[k];
+  openDrawer(c.t, '<p><span class="tag ' + (c.real ? 't-real' : 't-fict') + '">' + (c.real ? 'Texto real' : 'Ficticio') + '</span> <span class="small muted">' + esc(c.src) + '</span></p><div class="paper" style="box-shadow:none">' + esc(c.txt) + '</div>' +
+    (c.real ? '<p class="small muted">En la plataforma, la cita enlaza al documento oficial y a la versión que rige en la fecha del acto.</p>' : '<p class="small muted">Dato inventado para la demo.</p>'));
+  log('Abre la cita: ' + c.t);
+}
+
+/* ===================== Acciones ===================== */
+function setRole(r, silent){ S.role = r; $('#role').value = r; if (!silent){ log('Cambia de perfil a ' + ROLE_NAME[r], true); toast('Ahora ves la plataforma como ' + ROLE_NAME[r] + '.'); } }
+var A = {
+  tour:function(){ startTour(); },
+  confirm:function(id){ if (S.confirmed[id]) return; S.confirmed[id] = true; log('Confirma el plazo: ' + PLAZOS[id].asunto); toast('Confirmado. El aviso deja de escalar y queda en la traza.'); render(); },
+  vig:function(id){ S.vigSel = id; go('vigilancia', id); },
+  art:function(a){ S.artSel = a; log('Revisa el artículo ' + a + ' de la reforma de CONSAR'); $('#vig-detail').innerHTML = vigDetail(); },
+  avisar:function(){ S.avisado.cump = true; log('Avisa a Cumplimiento de la reforma de CONSAR'); toast('Cumplimiento avisado con la cita al DOF.'); $('#vig-detail').innerHTML = vigDetail(); },
+  pla:function(id){ S.plaSel = id; S.dayNote = ''; go('plazos', id); },
+  regla:function(r){ S.regla = r; S.dayNote = ''; log(r === 'vigente' ? 'Ve el cómputo con la regla que rige' : 'Compara con el texto publicado que aún no rige'); $('#pla-detail').innerHTML = plaDetail(); if (tourOn) spot(); },
+  con:function(id){ S.conSel = id; S.clauseSel = null; go('contratos', id); },
+  clause:function(i){ S.clauseSel = +i; $('#con-detail').innerHTML = conDetail(); },
+  fix:function(a){ S.fixed[S.conSel + ':' + a] = true; log('Propone el texto del contrato tipo en ' + CONTRACTS[S.conSel].t + ': ' + ALERTS[a].t, true); toast('Texto propuesto. Compras lo verá en su contrato.'); render(); },
+  unfix:function(a){ delete S.fixed[S.conSel + ':' + a]; render(); },
+  move:function(col){ var id = S.conSel; S.cols[id] = col; log((col === 'firma' ? 'Envía a firma ' : 'Devuelve a ' + CONTRACTS[id].area + ' ') + CONTRACTS[id].t, CONTRACTS[id].area === 'Compras'); toast(col === 'firma' ? 'Enviado a firma. La decisión es del abogado y queda registrada.' : 'Devuelto a ' + CONTRACTS[id].area + ' con las alertas y sus citas.'); render(); },
+  upload:function(v){ var p = v.split(':'), x = CONTRACTS[p[0]], d = x.docs[+p[1]]; if (!d || d.ok) return; d.ok = true; if (p[0] === 'ti') S.fixed['ti:repse'] = 'doc'; log('Sube «' + d.n + '» para ' + x.t, true); toast('Documento subido. Jurídico lo ve al momento.'); render(); },
+  resend:function(id){ var x = CONTRACTS[id]; if ((x.docs || []).some(function(d){ return !d.ok; })) return; S.cols[id] = 'juridico'; if (id === 'arrend') S.fixed['arrend:pena'] = true; log('Reenvía a Jurídico ' + x.t, true); toast('Enviado a Jurídico con la primera revisión hecha.'); render(); },
+  ask:function(i){ var compras = S.role === 'compras', Q = compras ? QA_C : QA; (compras ? S.chatC : S.chat).push(+i); log('Pregunta: ' + Q[+i].q); render(); var ch = $('#chat'); if (ch && ch.lastElementChild) ch.lastElementChild.scrollIntoView({block:'nearest'}); },
+  clearchat:function(){ if (S.role === 'compras') S.chatC = []; else S.chat = []; render(); },
+  toggle:function(i){ var a = S.agents[+i]; a.on = !a.on; log((a.on ? 'Reactiva' : 'Pausa') + ' el agente ' + a.n); render(); },
+  src:function(s){ keepDraft(); var d = S.draft, k = d.src.indexOf(s); if (k >= 0) d.src.splice(k,1); else d.src.push(s); render(); },
+  avisa:function(s){ keepDraft(); var d = S.draft, k = d.avisa.indexOf(s); if (k >= 0) d.avisa.splice(k,1); else d.avisa.push(s); render(); },
+  model:function(m){ keepDraft(); S.draft.m = m; render(); },
+  amod:function(m){ keepDraft(); S.draft.mod = m; render(); },
+  create:function(){
+    keepDraft(); var d = S.draft, sens = d.src.some(function(s){ return SENSIBLE.indexOf(s) >= 0; });
+    if (!d.src.length){ toast('Elige al menos una fuente.'); return; }
+    var name = d.n.trim() || 'Agente nuevo';
+    S.agents.unshift({n:name, mod:d.mod, g:'Tu gerencia', src:d.src.slice(), m:sens ? 'Local' : d.m, pct:0, on:true});
+    log('Activa el agente «' + name + '» con ' + d.src.length + (d.src.length === 1 ? ' fuente' : ' fuentes') + ' y modelo ' + (sens ? 'local' : (d.m === 'Nube' ? 'en la nube' : 'local')));
+    S.draft = {n:'', mod:'Conocimiento jurídico', src:['DOF'], m:'Nube', tope:40, avisa:['Jurídico Corporativo']};
+    toast('Agente activado. Ya está en la lista y en la traza.'); render();
+  },
+  logf:function(f){ S.logFilter = f; render(); },
+  areaf:function(a){ S.areaF = a; log('Filtra los contratos por área: ' + (a === 'todas' ? 'todas' : a)); render(); },
+  esc:function(id){ S.escSel = id; go('escritos', id); },
+  epend:function(k){ var id = S.escSel; S.escOk[id + ':' + k] = true; log('Cierra un pendiente de «' + ESCRITOS[id].t + '»: ' + ESCRITOS[id].pend[k].ok); toast(ESCRITOS[id].pend[k].ok + '. Queda en la traza.'); render(); },
+  esave:function(){ var n = Object.keys(S.escEd).filter(function(k){ return k.indexOf(S.escSel + ':') === 0; }).length; log('Guarda una versión de «' + ESCRITOS[S.escSel].t + '»' + (n ? ' con ' + n + (n === 1 ? ' párrafo editado' : ' párrafos editados') : '')); toast('Versión guardada. El historial queda en la traza.'); },
+  efirma:function(){ var id = S.escSel; if (escOpen(id)) return; S.escFirma[id] = true; log('Pasa a firma «' + ESCRITOS[id].t + '»'); toast('En firma. Firma el abogado responsable.'); render(); },
+  wtipo:function(k){ S.wiz.tipo = k; S.wiz.docs = {}; render(); },
+  wmonto:function(m){ keepWiz(); S.wiz.monto = m; render(); },
+  wcambios:function(c){ keepWiz(); S.wiz.cambios = c; render(); },
+  wnext:function(){ keepWiz(); S.wiz.step = Math.min(3, S.wiz.step + 1); render(); },
+  wback:function(){ keepWiz(); S.wiz.step = Math.max(1, S.wiz.step - 1); render(); },
+  wdoc:function(i){ S.wiz.docs[+i] = true; render(); },
+  wsend:function(){
+    var w = S.wiz, T = TIPOS[w.tipo], prov = w.prov.trim() || 'Proveedor ficticio nuevo';
+    var faltan = T.docs.filter(function(_, i){ return !w.docs[i]; });
+    var directo = w.tipo === 'nda' && w.cambios === 'no' && !faltan.length;
+    S.nuevos++; var id = 'n' + S.nuevos;
+    CONTRACTS[id] = {t:T.t + ' · ' + prov, area:'Compras', p:prov, col:directo ? 'firma' : 'juridico', nuevo:true, alerts:faltan.length ? ['docs'] : [],
+      resumen:directo ? 'Contrato tipo sin cambios: va directo a firma.' : 'Solicitud nueva de Compras. Primera revisión hecha' + (faltan.length ? ': faltan documentos.' : ' sin alertas.') + (w.cambios === 'si' ? ' Pide cambios sobre el contrato tipo.' : ''),
+      nota:directo ? 'Contrato tipo sin cambios: va directo a firma según la política.' : (faltan.length ? 'Jurídico necesita los documentos que faltan para cerrar la revisión.' : 'Jurídico lo está revisando. La primera revisión no encontró alertas.'),
+      docs:T.docs.map(function(n, i){ return {n:n, ok:!!w.docs[i]}; })};
+    S.cols[id] = CONTRACTS[id].col; S.conSel = id;
+    w.done = {id:id, firma:directo, msg:directo ? 'Es el contrato tipo de confidencialidad sin cambios y con los documentos completos. Según la política de Compras (ficticia) no necesita revisión de Jurídico.' : ('La revisión automática se hizo en segundos' + (faltan.length ? ' y marca ' + faltan.length + (faltan.length === 1 ? ' documento pendiente' : ' documentos pendientes') + ': ' + faltan.join(', ') + '.' : ' y no encontró alertas.') + (w.cambios === 'si' ? ' Como pides cambios sobre el contrato tipo, lo revisa un abogado.' : '') + ' Tiempo medio de Jurídico este mes: 2.4 días (ficticio).')};
+    log('Crea la solicitud «' + CONTRACTS[id].t + '» y la ' + (directo ? 'manda directo a firma' : 'envía a Jurídico'), true);
+    toast(directo ? 'Directo a firma.' : 'Enviada a Jurídico con la primera revisión hecha.'); render();
+  },
+  wizreset:function(){ S.wiz = {step:1, tipo:null, prov:'', monto:null, cambios:null, docs:{}, done:null}; render(); },
+  seeas:function(){ setRole('abogada'); go('contratos', S.conSel); }
+};
+function keepDraft(){ var n = $('#ag-n'), t = $('#ag-t'); if (n) S.draft.n = n.value; if (t) S.draft.tope = +t.value; }
+function keepWiz(){ var p = $('#w-prov'); if (p) S.wiz.prov = p.value; }
+function selNode(id){ S.mapSel = S.mapSel === id ? null : id; if (S.mapSel) log('Abre en el mapa: ' + NODEINFO[id][0]); render(); var el = document.querySelector('[data-node="' + id + '"]'); if (el) el.focus(); }
+
+document.addEventListener('click', function(e){
+  var c = e.target.closest('[data-cite]'); if (c){ e.preventDefault(); showCite(c.getAttribute('data-cite')); return; }
+  var g = e.target.closest('[data-go]');
+  if (g){
+    var r = g.getAttribute('data-go'), base = r.split('/')[0];
+    if (PERM[S.role].indexOf(base) < 0){ openDrawer('Sin permiso', '<p>Con el perfil de <b>' + esc(ROLE_NAME[S.role]) + '</b> este módulo está bloqueado.</p><p class="muted">Los permisos los fija Profuturo por rol. Cambia de perfil arriba, en «Ver como».</p>'); return; }
+    if (r === 'impacto') S.mapSel = null;
+    if (r === 'nueva' && S.wiz.done) A.wizreset();
+    var p = r.split('/'); go(p[0], p[1]); return;
+  }
+  var a = e.target.closest('[data-act]');
+  if (a){ if (a.disabled) return; var k = a.getAttribute('data-act').split(':'); if (A[k[0]]) A[k[0]](k.slice(1).join(':')); return; }
+  var n = e.target.closest('[data-node]'); if (n){ selNode(n.getAttribute('data-node')); return; }
+  var d = e.target.closest('[data-day]'); if (d){ S.dayNote = dayText(d.getAttribute('data-day')); $('#daynote').textContent = S.dayNote; }
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape'){ if ($('#drawer').classList.contains('open')) closeDrawer(); else if (tourOn) endTour(); return; }
+  var t = e.target;
+  if (t.closest){
+    var n = t.closest('[data-node]');
+    if (n && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); selNode(n.getAttribute('data-node')); return; }
+    var tr = t.closest('tr[data-act]');
+    if (tr && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); tr.click(); return; }
+  }
+  if (tourOn && !/INPUT|TEXTAREA|SELECT/.test(t.tagName) && !t.isContentEditable){ if (e.key === 'ArrowRight') tourStep(1); if (e.key === 'ArrowLeft') tourStep(-1); }
+});
+document.addEventListener('input', function(e){ var es = e.target.closest && e.target.closest('[data-esec]'); if (es){ S.escEd[es.getAttribute('data-esec')] = es.textContent; return; } if (e.target.id === 'ag-t'){ $('#ag-tv').textContent = e.target.value; S.draft.tope = +e.target.value; } if (e.target.id === 'ag-n') S.draft.n = e.target.value; if (e.target.id === 'w-prov') S.wiz.prov = e.target.value; });
+document.addEventListener('submit', function(e){
+  if (e.target.getAttribute('data-form') !== 'ask') return;
+  e.preventDefault(); var q = ($('#askin').value || '').toLowerCase(); if (!q.trim()) return;
+  var i;
+  if (S.role === 'compras') i = /firma|sin pasar|directo/.test(q) ? 1 : /incidente|cláusula|clausula|reforma/.test(q) ? 2 : 0;
+  else i = /tfja|boletín|boletin|surte|notific/.test(q) ? 0 : /grupo|consentim|datos de (sus )?trabajadores/.test(q) ? 1 : /subcontrat|repse|stps/.test(q) ? 2 : /\bune\b|unidad especializada|condusef|reclamaci/.test(q) ? 3 : 4;
+  A.ask(i);
+});
+$('#dr-close').addEventListener('click', closeDrawer);
+$('#scrim').addEventListener('click', closeDrawer);
+$('#role').addEventListener('change', function(e){ setRole(e.target.value); if (PERM[S.role].indexOf(S.route) < 0) go('hoy'); else render(); });
+$('#ex-toggle').addEventListener('click', function(){ var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', String(on)); this.textContent = on ? 'Explicaciones: sí' : 'Explicaciones: no'; document.body.classList.toggle('sin-explicaciones', !on); });
+function syncTheme(){ var dark = document.documentElement.getAttribute('data-theme') === 'dark'; var b = $('#theme-toggle'); b.textContent = dark ? 'Modo claro' : 'Modo oscuro'; b.setAttribute('aria-pressed', String(dark)); }
+$('#theme-toggle').addEventListener('click', function(){ var dark = document.documentElement.getAttribute('data-theme') !== 'dark'; document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light'); try{ localStorage.setItem('tw-demo-tema', dark ? 'dark' : 'light'); }catch(err){} syncTheme(); });
+syncTheme();
+
+/* ===================== Recorrido ===================== */
+var TOUR = [
+  {r:'hoy', role:'abogada', sel:'#hoy-list', t:'7:05 de la mañana', p:'Los agentes ya revisaron el DOF, el Semanario Judicial y los boletines. La abogada abre la plataforma y ve lo que le toca hoy, ordenado por urgencia.'},
+  {r:'vigilancia/ref', role:'abogada', sel:'#vig-paper', t:'Conocimiento: el cambio llega solo', p:'Una reforma de CONSAR (ficticia) salió esta mañana en el DOF. La plataforma la compara con la versión que rige, artículo por artículo.', pre:function(){ S.vigSel = 'ref'; S.artSel = '31'; }},
+  {r:'impacto', role:'abogada', sel:'#map', t:'Conocimiento: qué requiere revisión', p:'Dos contratos, un criterio interno y un oficio de CONSAR abierto, con las áreas avisadas. El riesgo que señala: el centro de datos da 72 horas para avisar de incidentes y la reforma pide 24. Cada nodo se abre.', pre:function(){ S.mapSel = 'cdat'; }},
+  {r:'consulta', role:'abogada', sel:'#chat', t:'Conocimiento: preguntar a la norma', p:'Cualquiera del equipo pregunta. La respuesta trae la cita y, si no hay respaldo, lo dice.', pre:function(){ if (S.chat.indexOf(0) < 0) S.chat.push(0); }},
+  {r:'contratos/pub', role:'abogada', sel:'#doc', t:'Contratos de todas las áreas', p:'Este viene de Mercadotecnia. La cláusula octava deja pasar datos de trabajadores a empresas del grupo y CONSAR lo prohíbe (texto real). La plataforma señala el riesgo y propone el texto. Decide el abogado.', pre:function(){ S.conSel = 'pub'; S.areaF = 'todas'; S.clauseSel = 3; }},
+  {r:'hoy', role:'compras', sel:'#hoy-list', t:'Contratos: el área solicitante', p:'Compras ve qué le pide Jurídico en lenguaje llano y sube lo que falta. Los contratos tipo sin cambios van directos a firma y el resto llega a Jurídico ya revisado.'},
+  {r:'escritos/csr', role:'abogada', sel:'#esc-paper', t:'Escritos: lo que falta, marcado', p:'La reforma de hoy toca un oficio abierto de CONSAR. El agente organizó hechos y respaldo, preparó la respuesta y marcó en ámbar lo que falta. Mientras quede un pendiente no pasa a firma.', pre:function(){ S.escSel = 'csr'; }},
+  {r:'plazos/nul', role:'abogada', sel:'#vigencia', t:'Plazos: un cómputo explicado', p:'Nuevo acuerdo en el TFJA. La reforma de junio cambió el artículo 65, pero no rige hasta febrero de 2027. La plataforma aplica la regla de esa fecha, salta las vacaciones del tribunal y propone el 12 de enero. Lo confirma el abogado.', pre:function(){ S.plaSel = 'nul'; S.regla = 'vigente'; }},
+  {r:'agentes', role:'abogada', sel:'#builder', t:'Configuración de agentes', p:'Una capacidad transversal. Los módulos organizan el trabajo y los agentes ejecutan tareas dentro de ellos. Si un agente lee expedientes con datos personales, el modelo corre en casa. Todo queda en la traza. Ahora explora libremente.', pre:function(){ if (S.draft.src.indexOf('Expedientes') < 0) S.draft.src.push('Expedientes'); }}
+];
+var tourOn = false, tourI = 0;
+function startTour(){ tourOn = true; tourI = 0; $('#tour').classList.add('on'); showStep(); }
+function endTour(){ tourOn = false; $('#tour').classList.remove('on'); $$('.spot').forEach(function(x){ x.classList.remove('spot'); }); }
+function tourStep(d){ var n = tourI + d; if (n < 0) return; if (n >= TOUR.length){ endTour(); toast('Recorrido terminado. Todo sigue siendo clicable.'); return; } tourI = n; showStep(); }
+function showStep(){
+  var s = TOUR[tourI]; if (s.pre) s.pre();
+  if (S.role !== s.role) setRole(s.role, true);
+  $('#tour-t').textContent = s.t; $('#tour-p').textContent = s.p; $('#tour-n').textContent = 'Paso ' + (tourI+1) + ' de ' + TOUR.length;
+  $('#tour-dots').innerHTML = TOUR.map(function(_, i){ return '<i class="' + (i === tourI ? 'on' : '') + '"></i>'; }).join('');
+  $('#tour-prev').disabled = tourI === 0; $('#tour-next').textContent = tourI === TOUR.length - 1 ? 'Terminar' : 'Siguiente';
+  var p = s.r.split('/'); go(p[0], p[1]);
+}
+function spot(){
+  $$('.spot').forEach(function(x){ x.classList.remove('spot'); });
+  var s = TOUR[tourI]; if (!s || s.r.split('/')[0] !== S.route) return; var el = $(s.sel);
+  if (el){ el.classList.add('spot'); el.scrollIntoView({block:'center'}); }
+}
+$('#tour-start').addEventListener('click', startTour);
+$('#tour-next').addEventListener('click', function(){ tourStep(1); });
+$('#tour-prev').addEventListener('click', function(){ tourStep(-1); });
+$('#tour-exit').addEventListener('click', endTour);
+
+parse(); render();
+})();
+</script>
+</body>
+</html>
